@@ -1,4 +1,5 @@
 // Telegram Stars OTC Desk Pricing & Service
+import { getTokenPrice } from './priceService';
 
 export const STARS_PACKAGES = [
   { stars: 50, badge: 'شروع', popular: false },
@@ -34,16 +35,20 @@ export function calculateStarsPrice(starsCount, methodId = 'ton') {
   const totalUSD = count * STAR_BASE_USD * (1 - discount);
   const totalToman = Math.round(totalUSD * TOMAN_PER_USD);
 
-  // Crypto conversion
+  // Crypto conversion using live market prices
   let cryptoAmount = 0;
+  const tonPrice = getTokenPrice('ton') || 1.60;
+  const solPrice = getTokenPrice('sol') || 117.10;
+  const trxPrice = getTokenPrice('trx') || 0.34;
+
   if (methodId === 'ton') {
-    cryptoAmount = Number((totalUSD / 5.40).toFixed(3)); // TON ~ $5.40
+    cryptoAmount = Number((totalUSD / tonPrice).toFixed(3));
   } else if (methodId === 'usdt_trc20') {
     cryptoAmount = Number(totalUSD.toFixed(2));
   } else if (methodId === 'sol') {
-    cryptoAmount = Number((totalUSD / 152.80).toFixed(4));
+    cryptoAmount = Number((totalUSD / solPrice).toFixed(4));
   } else if (methodId === 'trx') {
-    cryptoAmount = Number((totalUSD / 0.165).toFixed(1));
+    cryptoAmount = Number((totalUSD / trxPrice).toFixed(1));
   }
 
   return {

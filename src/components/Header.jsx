@@ -1,17 +1,16 @@
 import React from 'react';
 import { 
-  SparklesIcon, 
   WalletIcon, 
-  StarsIcon, 
   ArrowDownUp, 
   Clock, 
-  ExternalLinkIcon 
+  Sparkles 
 } from 'lucide-react';
 import { 
   EthereumIcon, 
   SolanaIcon, 
   TonIcon, 
-  TronIcon 
+  TronIcon,
+  StarsIcon
 } from './Icons';
 import { shortenAddress } from '../utils/format';
 
@@ -25,98 +24,92 @@ export default function Header({
 }) {
   const getChainIcon = () => {
     switch (activeChain) {
-      case 'ethereum': return <EthereumIcon size={18} />;
-      case 'solana': return <SolanaIcon size={18} />;
-      case 'ton': return <TonIcon size={18} />;
-      case 'tron': return <TronIcon size={18} />;
-      default: return <SparklesIcon size={18} className="text-accent-emerald" />;
+      case 'ethereum': return <EthereumIcon size={16} />;
+      case 'solana': return <SolanaIcon size={16} />;
+      case 'ton': return <TonIcon size={16} />;
+      case 'tron': return <TronIcon size={16} />;
+      default: return <Sparkles size={16} className="text-emerald-400" />;
     }
   };
 
   const getChainName = () => {
     switch (activeChain) {
-      case 'ethereum': return 'اتریوم (EVM)';
-      case 'solana': return 'سولانا (SOL)';
-      case 'ton': return 'تون (TON)';
-      case 'tron': return 'ترون (TRON)';
-      default: return 'انتخاب شبکه';
+      case 'ethereum': return 'اتریوم';
+      case 'solana': return 'سولانا';
+      case 'ton': return 'تون';
+      case 'tron': return 'ترون';
+      default: return 'شبکه';
     }
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-dark-border/80 bg-dark-bg/85 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-40 w-full border-b border-white/[0.06] bg-dark-bg/90 backdrop-blur-md">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
         
         {/* Brand Logo & Name */}
         <div className="flex items-center gap-6">
-          <a href="/" className="flex items-center gap-3 group">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-accent-emerald/20 via-dark-surface to-dark-card border border-accent-emerald/30 flex items-center justify-center shadow-glow-emerald group-hover:scale-105 transition-transform duration-200">
-              <span className="text-xl font-black bg-gradient-to-r from-accent-emerald to-accent-cyan bg-clip-text text-transparent">JS</span>
+          <a href="/" className="flex items-center gap-2.5 group">
+            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
+              <span className="text-xs font-black text-emerald-400">JS</span>
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xl font-extrabold text-white tracking-tight">JSWAP</span>
-                <span className="text-xs px-2 py-0.5 rounded-full font-bold bg-accent-emerald/15 text-accent-emerald border border-accent-emerald/30">فارسی</span>
-              </div>
-              <span className="text-[11px] text-slate-400 block -mt-0.5 font-mono">javadnode.top</span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-base font-bold text-white tracking-tight">JSWAP</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-white/[0.06] text-zinc-400">فارسی</span>
             </div>
           </a>
 
-          {/* Navigation Links (Desktop) */}
-          <nav className="hidden md:flex items-center gap-1.5 p-1 bg-dark-card border border-dark-border rounded-xl">
+          {/* Navigation Tabs (Desktop) */}
+          <nav className="hidden md:flex items-center gap-1 p-1 bg-dark-card border border-white/[0.06] rounded-xl">
             <button
               type="button"
               onClick={() => setActiveTab('swap')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeTab === 'swap' 
-                  ? 'bg-accent-emerald/15 text-accent-emerald border border-accent-emerald/30 shadow-sm' 
-                  : 'text-slate-400 hover:text-white hover:bg-dark-hover'
+                  ? 'bg-dark-surface text-white border border-white/[0.08]' 
+                  : 'text-zinc-400 hover:text-white'
               }`}
             >
-              <ArrowDownUp size={16} />
-              <span>سواپ کریپتو</span>
+              <ArrowDownUp size={14} />
+              <span>سواپ</span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveTab('stars')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeTab === 'stars' 
-                  ? 'bg-accent-gold/15 text-accent-gold border border-accent-gold/30 shadow-sm' 
-                  : 'text-slate-400 hover:text-white hover:bg-dark-hover'
+                  ? 'bg-dark-surface text-amber-300 border border-white/[0.08]' 
+                  : 'text-zinc-400 hover:text-white'
               }`}
             >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-gold opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-accent-gold"></span>
-              </span>
-              <span>خرید و فروش استارز</span>
+              <StarsIcon size={14} />
+              <span>استارز تلگرام</span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveTab('orders')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeTab === 'orders' 
-                  ? 'bg-sky-500/15 text-sky-400 border border-sky-500/30 shadow-sm' 
-                  : 'text-slate-400 hover:text-white hover:bg-dark-hover'
+                  ? 'bg-dark-surface text-sky-400 border border-white/[0.08]' 
+                  : 'text-zinc-400 hover:text-white'
               }`}
             >
-              <Clock size={16} />
-              <span>پیگیری سفارشات</span>
+              <Clock size={14} />
+              <span>سفارشات</span>
             </button>
           </nav>
         </div>
 
-        {/* Right Actions: Chain Selector + Wallet Connect Button */}
-        <div className="flex items-center gap-3">
+        {/* Right Actions: Chain Selector + Wallet Button */}
+        <div className="flex items-center gap-2">
           
           {/* Active Chain Button */}
           <button
             type="button"
             onClick={onOpenChainSelector}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-dark-card border border-dark-border hover:border-slate-500 transition-all text-xs font-bold text-slate-200"
-            title="تغییر شبکه بلاکچین"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-dark-card border border-white/[0.06] hover:border-white/20 transition-all text-xs font-bold text-zinc-300"
+            title="انتخاب شبکه"
           >
             {getChainIcon()}
             <span className="hidden sm:inline">{getChainName()}</span>
@@ -126,16 +119,23 @@ export default function Header({
           <button
             type="button"
             onClick={onOpenWalletModal}
-            className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm ${
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
               walletAddress
-                ? 'bg-dark-surface border border-accent-emerald/40 text-emerald-400 hover:bg-dark-hover'
-                : 'bg-gradient-to-r from-accent-emerald to-emerald-600 hover:from-emerald-500 hover:to-emerald-700 text-dark-bg font-extrabold shadow-glow-emerald hover:scale-[1.02]'
+                ? 'bg-dark-surface border border-emerald-500/30 text-emerald-400 hover:bg-dark-hover'
+                : 'bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold'
             }`}
           >
-            <WalletIcon size={18} className={walletAddress ? 'text-accent-emerald' : 'text-dark-bg'} />
-            <span>
-              {walletAddress ? shortenAddress(walletAddress) : 'اتصال کیف پول'}
-            </span>
+            {walletAddress ? (
+              <>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>{shortenAddress(walletAddress)}</span>
+              </>
+            ) : (
+              <>
+                <WalletIcon size={14} />
+                <span>اتصال کیف پول</span>
+              </>
+            )}
           </button>
         </div>
 

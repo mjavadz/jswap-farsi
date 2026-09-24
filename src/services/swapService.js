@@ -1,4 +1,4 @@
-// Multi-chain DEX quote calculation and routing service
+import { getTokenPrice } from './priceService';
 
 const PROTOCOL_NAMES = {
   ton: 'STON.fi & DeDust Aggregator',
@@ -8,10 +8,10 @@ const PROTOCOL_NAMES = {
 };
 
 const GAS_FEES = {
-  ton: { fee: '0.005 TON', usd: '$0.02' },
-  solana: { fee: '0.00005 SOL', usd: '$0.008' },
-  ethereum: { fee: '0.0008 ETH', usd: '$2.20' },
-  tron: { fee: '3.5 TRX', usd: '$0.58' },
+  ton: { fee: '0.005 TON', usd: '$0.008' },
+  solana: { fee: '0.00005 SOL', usd: '$0.006' },
+  ethereum: { fee: '0.0008 ETH', usd: '$2.15' },
+  tron: { fee: '3.5 TRX', usd: '$0.52' },
 };
 
 export function getSwapQuote({ chain, fromToken, toToken, fromAmount, slippage = 0.5 }) {
@@ -20,40 +20,44 @@ export function getSwapQuote({ chain, fromToken, toToken, fromAmount, slippage =
   }
 
   const inAmount = Number(fromAmount);
-  const fromValueUSD = inAmount * (fromToken.priceUSD || 1);
-  const toPriceUSD = toToken.priceUSD || 1;
-  const rawToAmount = fromValueUSD / toPriceUSD;
+  const fromPrice = getTokenPrice(fromToken.symbol);
+  const toPrice = getTokenPrice(toToken.symbol);
 
-  // Tiny realistic market impact (0.02% - 0.15%)
-  const priceImpact = Math.min(1.2, 0.04 + (inAmount > 1000 ? 0.08 : 0.01));
-  const effectiveToAmount = rawToAmount * (1 - priceImpact / 100);
+  if (toPrice <= 0) return null;
 
-  const slippageFactor = Number(slippage) / 100;
-  const minReceived = effectiveToAmount * (1 - slippageFactor);
+  const fromValueUSD = inAmount * fromPrice;
+  const rawToAmount = fromValueUSD / toPrice;
 
-  const rate = (fromToken.priceUSD || 1) / toPriceUSD;
-  const inverseRate = toPriceUSD / (fromToken.priceUSD || 1);
+  // Real-time market exchange rate
+  const rate = fromPrice / toPrice;
+  const inverseRate = toPrice / fromPrice;
+
+  // Slippage factor
+  const slippageFactor = (Number(slippage) || 0.5) / 100;
+  const minReceived = rawToAmount * (1 - slippageFactor);
+
+  const decimals = Math.min(toToken.decimals || 6, 6);
 
   return {
     fromAmount: inAmount,
-    toAmount: Number(effectiveToAmount.toFixed(toToken.decimals > 6 ? 6 : toToken.decimals)),
-    minReceived: Number(minReceived.toFixed(toToken.decimals > 6 ? 6 : toToken.decimals)),
-    rate: Number(rate.toFixed(6)),
-    inverseRate: Number(inverseRate.toFixed(6)),
-    priceImpact: `${priceImpact.toFixed(2)}%`,
+    toAmount: Number(rawToAmount.toFixed(decimals)),
+    minReceived: Number(minReceived.toFixed(decimals)),
+    rate: Number(rate.toFixed(rate < 0.001 ? 8 : 6)),
+    inverseRate: Number(inverseRate.toFixed(inverseRate < 0.001 ? 8 : 6)),
+    fromPrice,
+    toPrice,
     protocol: PROTOCOL_NAMES[chain] || 'DEX Auto-Router',
     gasFee: GAS_FEES[chain] || { fee: '~', usd: '~' },
     route: [fromToken.symbol, `${PROTOCOL_NAMES[chain]}`, toToken.symbol],
     fromValueUSD: fromValueUSD.toFixed(2),
-    toValueUSD: (effectiveToAmount * toPriceUSD).toFixed(2),
+    toValueUSD: fromValueUSD.toFixed(2),
   };
 }
 
 export async function executeSwap({ chain, fromToken, toToken, quote, userAddress }) {
   // Simulate network broadcast with realistic transaction delay
-  await new Promise(resolve => setTimeout(resolve, 2200));
+  await new Promise(resolve => setTimeout(resolve, 2000));
 
-  // Generate explorer transaction hash matching chain conventions
   let txHash = '';
   let explorerUrl = '';
 

@@ -8,51 +8,36 @@
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
-  /* Custom subtle scrollbars */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
   }
   ::-webkit-scrollbar-track {
-    background: #080B11;
+    background: #0A0B0E;
   }
   ::-webkit-scrollbar-thumb {
-    background: #1F2E45;
+    background: #222634;
     border-radius: 9999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #334969;
+    background: #32384C;
   }
 }
 
+.minimal-card {
+  background: #12141C;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.minimal-card-hover {
+  transition: border-color 0.15s ease;
+}
+
+.minimal-card-hover:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
 .glass-card {
-  background: rgba(15, 22, 34, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(31, 46, 69, 0.8);
-}
-
-.glass-card-hover {
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.glass-card-hover:hover {
-  border-color: rgba(16, 185, 129, 0.4);
-  box-shadow: 0 8px 30px -10px rgba(16, 185, 129, 0.15);
-  transform: translateY(-1px);
-}
-
-.tab-active-glow {
-  position: relative;
-}
-
-.tab-active-glow::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 10%;
-  right: 10%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #10B981, transparent);
-  border-radius: 9999px;
+  background: #12141C;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
