@@ -3,7 +3,8 @@ import {
   WalletIcon, 
   ArrowDownUp, 
   Clock, 
-  Sparkles 
+  Sparkles,
+  CreditCard 
 } from 'lucide-react';
 import { 
   EthereumIcon, 
@@ -84,6 +85,19 @@ export default function Header({
             >
               <StarsIcon size={14} />
               <span>استارز تلگرام</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('iran')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                activeTab === 'iran' 
+                  ? 'bg-dark-surface text-emerald-400 border border-white/[0.08]' 
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              <CreditCard size={14} />
+              <span>تسویه و ابزار ایران</span>
             </button>
 
             <button

@@ -4,6 +4,7 @@ import Footer from './components/Footer';
 import SwapCard from './components/swap/SwapCard';
 import StarsDesk from './components/stars/StarsDesk';
 import OrderTracker from './components/orders/OrderTracker';
+import IranToolkit from './components/iran/IranToolkit';
 import WalletModal from './components/WalletModal';
 import { useWallet } from './context/WalletContext';
 import { 
@@ -14,7 +15,7 @@ import {
   EthereumIcon, 
   TronIcon 
 } from './components/Icons';
-import { Clock, ShieldCheck } from 'lucide-react';
+import { Clock, ShieldCheck, CreditCard } from 'lucide-react';
 
 export default function App() {
   const { 
@@ -57,7 +58,7 @@ export default function App() {
             صرافی غیرحضانتی چندزنجیره‌ای
           </h1>
           <p className="text-xs text-zinc-400">
-            مبادله مستقیم توکن‌ها و خرید استارز تلگرام بدون واسطه و بدون احراز هویت
+            مبادله مستقیم توکن‌ها، خرید و فروش استارز تلگرام و تسویه بانکی به تومان
           </p>
         </div>
 
@@ -94,7 +95,14 @@ export default function App() {
           </div>
         )}
 
-        {/* Tab 3: Order Tracker */}
+        {/* Tab 3: Iran Web3 Toolkit (Toman Cashout, Gas, Anti-Sanction) */}
+        {activeTab === 'iran' && (
+          <div className="animate-fadeIn">
+            <IranToolkit />
+          </div>
+        )}
+
+        {/* Tab 4: Order Tracker */}
         {activeTab === 'orders' && (
           <div className="animate-fadeIn">
             <OrderTracker />
@@ -107,11 +115,11 @@ export default function App() {
       <Footer onSwitchTab={(tab) => setActiveTab(tab)} />
 
       {/* Mobile Floating Bottom Navigation Bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-dark-card/95 backdrop-blur-md border-t border-white/[0.06] px-4 py-2 flex items-center justify-around">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-dark-card/95 backdrop-blur-md border-t border-white/[0.06] px-3 py-2 flex items-center justify-around">
         <button
           type="button"
           onClick={() => setActiveTab('swap')}
-          className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all ${
+          className={`flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl transition-all ${
             activeTab === 'swap' ? 'text-emerald-400 font-bold' : 'text-zinc-400'
           }`}
         >
@@ -122,7 +130,7 @@ export default function App() {
         <button
           type="button"
           onClick={() => setActiveTab('stars')}
-          className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all ${
+          className={`flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl transition-all ${
             activeTab === 'stars' ? 'text-amber-300 font-bold' : 'text-zinc-400'
           }`}
         >
@@ -132,8 +140,19 @@ export default function App() {
 
         <button
           type="button"
+          onClick={() => setActiveTab('iran')}
+          className={`flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl transition-all ${
+            activeTab === 'iran' ? 'text-emerald-400 font-bold' : 'text-zinc-400'
+          }`}
+        >
+          <CreditCard size={16} />
+          <span className="text-[10px]">ایران</span>
+        </button>
+
+        <button
+          type="button"
           onClick={() => setActiveTab('orders')}
-          className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all ${
+          className={`flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl transition-all ${
             activeTab === 'orders' ? 'text-sky-400 font-bold' : 'text-zinc-400'
           }`}
         >
@@ -144,12 +163,12 @@ export default function App() {
         <button
           type="button"
           onClick={() => setIsWalletModalOpen(true)}
-          className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all ${
+          className={`flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl transition-all ${
             isConnected ? 'text-emerald-400 font-bold' : 'text-zinc-400'
           }`}
         >
           <ShieldCheck size={16} />
-          <span className="text-[10px]">{isConnected ? 'ولت متصل' : 'کیف پول'}</span>
+          <span className="text-[10px]">{isConnected ? 'ولت' : 'اتصال'}</span>
         </button>
       </div>
 
