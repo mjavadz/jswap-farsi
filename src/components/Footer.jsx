@@ -14,6 +14,7 @@ export default function Footer({ onSwitchTab }) {
     { id: 'optimism', name: 'آپتیمیزم', icon: <svg width={12} height={12} viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="#FF0420"/><path d="M10.8 12.2c-2.4 0-4.3 1.8-4.3 4.2 0 2.4 1.9 4.2 4.3 4.2 2.4 0 4.3-1.8 4.3-4.2 0-2.4-1.9-4.2-4.3-4.2zm0 6.2c-1.2 0-2.1-1-2.1-2 0-1 .9-2 2.1-2 1.2 0 2.1 1 2.1 2 0 1-.9 2-2.1 2zm8.5-6.2h3.4c2.4 0 4 1.5 4 3.7 0 2.2-1.6 3.7-4 3.7h-1.3v3h-2.1v-10.4zm2.1 5.3h1.3c1.2 0 1.9-.8 1.9-1.6 0-.8-.7-1.6-1.9-1.6h-1.3v3.2z" fill="#fff"/></svg>, badge: 'Superchain' },
     { id: 'polygon', name: 'پالیگان', icon: <svg width={12} height={12} viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="#8247E5"/><path d="M21.5 13.5l-4-2.3a3 3 0 00-3 0l-4 2.3a3 3 0 00-1.5 2.6v4.6a3 3 0 001.5 2.6l4 2.3a3 3 0 003 0l4-2.3a3 3 0 001.5-2.6v-4.6a3 3 0 00-1.5-2.6zm-1.5 5.5l-3.5 2a1 1 0 01-1 0l-3.5-2v-4a1 1 0 01.5-.9l3.5-2a1 1 0 011 0l3.5 2a1 1 0 01.5.9v4z" fill="#fff"/></svg>, badge: 'PoS' },
     { id: 'avalanche', name: 'آوالانچ', icon: <svg width={12} height={12} viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="#E84142"/><path d="M18.8 9.3c.7-1.2 2.4-1.2 3.1 0l5.8 10.4c.7 1.2-.2 2.7-1.6 2.7h-3.8c-.8 0-1.5-.4-1.9-1.1l-4.7-8.5c-.3-.5-.3-1.1 0-1.6l3.1-1.9zm-8.2 5.5l5.2 9.4c.4.7-.1 1.6-.9 1.6H5.7c-1.4 0-2.3-1.5-1.6-2.7l7.4-13.3c.7-1.2 2.4-1.2 3.1 0l1.4 2.5-4.4 7.9c-.3.5-.7.8-1.2.8h-2.4c-.6 0-.9-.6-.6-1.1l3.2-5.1z" fill="#fff"/></svg>, badge: 'Subnets' },
+    { id: 'sui', name: 'سویی', icon: <svg width={12} height={12} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#4DA2FF"/><path d="M12 4l5 8-5 8-5-8 5-8z" fill="#fff"/></svg>, badge: 'Move L1' },
     { id: 'stars', name: 'استارز', icon: <StarsIcon size={12} />, badge: 'Telegram' },
   ];
 
@@ -25,17 +26,17 @@ export default function Footer({ onSwitchTab }) {
   ];
 
   return (
-    <footer className="w-full border-t border-border bg-card/50 pt-8 pb-10 mt-auto">
+    <footer className="w-full border-t border-border bg-card/50 pt-8 pb-16 md:pb-12 mt-auto">
       <div className="max-w-4xl mx-auto px-4">
         
-        {/* Networks Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 mb-8">
+        {/* Networks Grid (Clean 12-item symmetric grid) */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 mb-8">
           {networks.map((net) => (
             <button
               key={net.id}
               type="button"
               onClick={() => onSwitchTab(net.id === 'stars' ? 'stars' : 'swap')}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/50 border border-border text-xs text-fgSubtle hover:text-fg hover:bg-card hover:border-accent/30 transition-all"
+              className="flex items-center gap-2 px-2.5 py-2 rounded-xl bg-card border border-border text-xs text-muted-foreground hover:text-foreground hover:border-accent/40 transition-all justify-center"
               title={net.badge}
             >
               <span className="shrink-0">{net.icon}</span>
@@ -45,7 +46,7 @@ export default function Footer({ onSwitchTab }) {
         </div>
 
         {/* Quick Links */}
-        <div className="flex flex-wrap gap-2 mb-8 text-xs text-fgSubtle">
+        <div className="flex flex-wrap justify-center gap-6 mb-8 text-xs text-muted-foreground">
           {links.map((link) => (
             <button
               key={link.tab}
@@ -59,24 +60,24 @@ export default function Footer({ onSwitchTab }) {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-4 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-fgSubtle">
+        <div className="pt-4 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground font-mono">
           <div className="flex items-center gap-2">
             <span>توسعه برای وب۳ فارسی</span>
-            <span className="text-fgMuted">•</span>
+            <span>•</span>
             <a 
               href="https://javadnode.top" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="font-mono underline hover:text-fg"
+              className="underline hover:text-foreground"
             >
               javadnode.top
             </a>
           </div>
           <div className="flex items-center gap-3">
-            <span className="font-mono text-fgMuted">v1.0.0</span>
+            <span>v1.0.0</span>
             <span className="flex items-center gap-1">
-              <Heart size={10} className="text-rose-500" />
-              <span>JSWAP</span>
+              <Heart size={10} className="text-rose-500 fill-rose-500" />
+              <span className="font-sans font-bold">JSWAP</span>
             </span>
           </div>
         </div>

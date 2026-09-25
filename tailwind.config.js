@@ -8,22 +8,55 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Ultra-minimal palette - only what's needed
+        // VibeFarsi CSS variable tokens for dark/light themes
+        border: "hsl(var(--border) / <alpha-value>)",
+        input: "hsl(var(--input) / <alpha-value>)",
+        ring: "hsl(var(--ring) / <alpha-value>)",
+        background: "hsl(var(--background) / <alpha-value>)",
+        foreground: "hsl(var(--foreground) / <alpha-value>)",
+        primary: {
+          DEFAULT: "hsl(var(--primary) / <alpha-value>)",
+          foreground: "hsl(var(--primary-foreground) / <alpha-value>)",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary) / <alpha-value>)",
+          foreground: "hsl(var(--secondary-foreground) / <alpha-value>)",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted) / <alpha-value>)",
+          foreground: "hsl(var(--muted-foreground) / <alpha-value>)",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent) / <alpha-value>)",
+          foreground: "hsl(var(--accent-foreground) / <alpha-value>)",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card) / <alpha-value>)",
+          foreground: "hsl(var(--card-foreground) / <alpha-value>)",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover) / <alpha-value>)",
+          foreground: "hsl(var(--popover-foreground) / <alpha-value>)",
+        },
+        brand: {
+          DEFAULT: "hsl(var(--brand) / <alpha-value>)",
+          foreground: "hsl(var(--brand-foreground) / <alpha-value>)",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive) / <alpha-value>)",
+          foreground: "hsl(var(--destructive-foreground) / <alpha-value>)",
+        },
+        success: "hsl(var(--success) / <alpha-value>)",
+        warning: "hsl(var(--warning) / <alpha-value>)",
+
+        // Ultra-minimal palette - preserved for backward compatibility
         bg: '#080808',
-        card: '#0F0F0F',
-        muted: '#1A1A1A',
-        border: '#262626',
-        
         fg: '#FFFFFF',
         fgMuted: '#A3A3A3',
         fgSubtle: '#737373',
-        
-        accent: '#10B981',      // Single accent - emerald
         accentHover: '#059669',
         accentSoft: 'rgba(16, 185, 129, 0.12)',
         accentRing: 'rgba(16, 185, 129, 0.3)',
-        
-        destructive: '#EF4444',
         destructiveSoft: 'rgba(239, 68, 68, 0.12)',
         
         // Chain colors (for badges only, minimal usage)
@@ -59,31 +92,15 @@ export default {
         '3xl': ['1.75rem', { lineHeight: '1.2', letterSpacing: '-0.03em' }],
         '4xl': ['2.25rem', { lineHeight: '1.1', letterSpacing: '-0.04em' }],
       },
-      spacing: {
-        '0.5': '0.125rem',
-        '1': '0.25rem',
-        '1.5': '0.375rem',
-        '2': '0.5rem',
-        '2.5': '0.625rem',
-        '3': '0.75rem',
-        '3.5': '0.875rem',
-        '4': '1rem',
-        '5': '1.25rem',
-        '6': '1.5rem',
-        '7': '1.75rem',
-        '8': '2rem',
-        '10': '2.5rem',
-        '12': '3rem',
-        '16': '4rem',
-      },
       borderRadius: {
         'none': '0',
-        'sm': '0.375rem',   // 6px
-        'DEFAULT': '0.5rem', // 8px
-        'md': '0.625rem',   // 10px
-        'lg': '0.75rem',    // 12px
-        'xl': '1rem',       // 16px
+        'sm': '0.375rem',
+        'DEFAULT': '0.5rem',
+        'md': '0.625rem',
+        'lg': '0.75rem',
+        'xl': '1rem',
         'full': '9999px',
+        'control': '9999px',
       },
       boxShadow: {
         'none': 'none',

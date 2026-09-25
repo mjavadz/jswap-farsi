@@ -3,6 +3,35 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --background: 0 0% 3%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 6%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 6%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 158 84% 40%; /* #10b981 Emerald */
+    --primary-foreground: 0 0% 3%;
+    --secondary: 0 0% 10%; /* #1a1a1a */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 64%; /* #a3a3a3 */
+    --accent: 158 84% 40%;
+    --accent-foreground: 0 0% 3%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 15%; /* #262626 */
+    --input: 0 0% 15%;
+    --ring: 158 84% 40%;
+    --brand: 158 84% 40%;
+    --brand-foreground: 0 0% 3%;
+    --success: 158 84% 40%;
+    --warning: 38 92% 50%;
+    --radius: 0.75rem;
+    --motion: 150ms;
+    --press: scale(0.98);
+  }
+
   * {
     @apply border-border;
   }
@@ -12,14 +41,14 @@
   }
 
   body {
-    @apply bg-bg text-fg font-sans antialiased;
+    @apply bg-background text-foreground font-sans antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   ::selection {
-    @apply bg-accent text-bg;
+    @apply bg-accent text-background;
   }
 
   /* Ultra-minimal scrollbar */
@@ -43,12 +72,12 @@
 
   /* Focus visible - minimal */
   *:focus-visible {
-    @apply outline-none ring-1 ring-accent ring-offset-2 ring-offset-bg;
+    @apply outline-none ring-1 ring-accent ring-offset-2 ring-offset-background;
   }
 
   /* Input base styles */
   input, textarea, select {
-    @apply bg-card border-border text-fg placeholder-fgSubtle;
+    @apply bg-card border-border text-foreground placeholder:text-muted-foreground;
     @apply focus:border-accent focus:ring-1 focus:ring-accent;
   }
 
@@ -64,31 +93,31 @@
   }
 
   .card-hover {
-    @apply transition-all duration-150 hover:border-[rgba(255,255,255,0.12)];
+    @apply transition-all duration-150 hover:border-border/80;
   }
 
   /* Minimal Button Variants */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg
-           bg-accent text-bg font-semibold text-sm
+           bg-accent text-background font-semibold text-sm
            transition-all duration-150
-           hover:bg-accentHover active:scale-[0.98]
+           hover:bg-emerald-600 active:scale-[0.98]
            disabled:opacity-40 disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg
-           bg-muted text-fg font-semibold text-sm border border-border
+           bg-muted text-foreground font-semibold text-sm border border-border
            transition-all duration-150
-           hover:bg-border hover:text-fg active:scale-[0.98]
+           hover:bg-border hover:text-foreground active:scale-[0.98]
            disabled:opacity-40 disabled:cursor-not-allowed;
   }
 
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg
-           text-fgMuted font-medium text-sm
+           text-muted-foreground font-medium text-sm
            transition-all duration-150
-           hover:bg-muted hover:text-fg active:scale-[0.98];
+           hover:bg-muted hover:text-foreground active:scale-[0.98];
   }
 
   .btn-destructive {
@@ -101,10 +130,10 @@
 
   /* Minimal Input */
   .input {
-    @apply w-full px-3 py-2 rounded-lg bg-card border border-border text-sm text-fg
-           placeholder-fgSubtle
+    @apply w-full px-3 py-2 rounded-lg bg-card border border-border text-sm text-foreground
+           placeholder:text-muted-foreground
            transition-all duration-150
-           focus:border-accent focus:ring-1 focus:ring-accent focus:bg-bg;
+           focus:border-accent focus:ring-1 focus:ring-accent focus:bg-background;
   }
 
   /* Minimal Badge */
@@ -113,11 +142,11 @@
   }
 
   .badge-accent {
-    @apply bg-accentSoft text-accent border border-accent/20;
+    @apply bg-accent/15 text-accent border border-accent/20;
   }
 
   .badge-chain {
-    @apply bg-muted text-fgMuted border border-border;
+    @apply bg-muted text-muted-foreground border border-border;
   }
 
   /* Dropdown/Modal base */
@@ -145,7 +174,7 @@
   }
 
   .token-row-selected {
-    @apply bg-accentSoft border border-accent/20 text-fg;
+    @apply bg-accent/15 border border-accent/20 text-foreground;
   }
 
   /* Chain option */
@@ -156,7 +185,7 @@
   }
 
   .chain-option-selected {
-    @apply bg-accentSoft text-accent font-semibold border border-accent/20;
+    @apply bg-accent/15 text-accent font-semibold border border-accent/20;
   }
 
   /* Settings drawer */
@@ -167,22 +196,18 @@
 }
 
 @layer utilities {
-  /* Text balance for headlines */
   .text-balance {
     text-wrap: balance;
   }
 
-  /* Tap highlight removal */
   .no-tap-highlight {
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* Hardware acceleration */
   .gpu {
     transform: translateZ(0);
   }
 
-  /* Minimal animations */
   @keyframes fade-in {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -219,4 +244,16 @@
 /* RTL adjustments */
 [dir="rtl"] .ltr {
   direction: ltr;
+}
+
+/* --- vibefarsi:shine-button --- */
+@keyframes shine {
+  0% { transform: translateX(-120%) skewX(-15deg); }
+  60%, 100% { transform: translateX(220%) skewX(-15deg); }
+}
+
+/* --- vibefarsi:text-shimmer --- */
+@keyframes shimmer {
+  from { background-position: 200% center; }
+  to { background-position: -200% center; }
 }

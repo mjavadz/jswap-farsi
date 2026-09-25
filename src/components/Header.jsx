@@ -12,6 +12,7 @@ import {
   StarsIcon
 } from './Icons';
 import { shortenAddress } from '../utils/format';
+import { Badge } from '@/components/ui/badge';
 
 export default function Header({ 
   activeTab, 
@@ -103,29 +104,29 @@ export default function Header({
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border bg-bg/80 backdrop-blur-sm">
+    <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-md">
       <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
         
         {/* Brand */}
         <div className="flex items-center gap-4">
           <a href="/" className="flex items-center gap-2 group" aria-label="JSWAP Home">
-            <div className="w-7 h-7 rounded-lg bg-accentSoft border border-accent/30 flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
+            <div className="w-7 h-7 rounded-lg bg-accent/15 border border-accent/30 flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
               <span className="text-xs font-bold text-accent">JS</span>
             </div>
-            <span className="text-lg font-bold text-fg tracking-tight hidden sm:block">JSWAP</span>
+            <span className="text-lg font-black text-foreground tracking-tight hidden sm:block">JSWAP</span>
           </a>
 
           {/* Desktop Navigation Tabs */}
-          <nav className="hidden md:flex items-center gap-0.5 px-1 bg-muted/50 border border-border rounded-lg" aria-label="Main navigation">
+          <nav className="hidden md:flex items-center gap-0.5 p-1 bg-muted/40 border border-border rounded-xl" aria-label="Main navigation">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   activeTab === tab.id
-                    ? 'bg-card text-fg border border-border shadow-sm'
-                    : 'text-fgSubtle hover:text-fg hover:bg-card/50'
+                    ? 'bg-card text-foreground border border-border shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-card/50'
                 }`}
               >
                 {tab.icon}
@@ -142,7 +143,7 @@ export default function Header({
           <button
             type="button"
             onClick={onOpenChainSelector}
-            className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-muted/50 border border-border hover:border-accent/40 transition-all text-xs font-semibold text-fgMuted hover:text-fg"
+            className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-card border border-border hover:border-accent/40 transition-all text-xs font-semibold text-muted-foreground hover:text-foreground"
             title="انتخاب شبکه مبادله"
             aria-label="Select network"
           >
@@ -150,21 +151,21 @@ export default function Header({
             <span className="hidden sm:inline">{getChainName()}</span>
           </button>
 
-          {/* Wallet Connect Button */}
+          {/* Wallet Connect Button with VibeFarsi styling */}
           <button
             type="button"
             onClick={onOpenWalletModal}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
               walletAddress
-                ? 'bg-muted border border-accent/30 text-accent hover:bg-card'
-                : 'bg-accent text-bg font-bold hover:bg-accentHover active:scale-[0.98]'
+                ? 'bg-card border border-accent/40 text-accent hover:bg-muted'
+                : 'bg-accent text-background font-bold hover:bg-emerald-600 active:scale-[0.98]'
             }`}
             aria-label={walletAddress ? 'Wallet connected' : 'Connect wallet'}
           >
             {walletAddress ? (
               <>
                 <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" aria-hidden="true" />
-                <span>{shortenAddress(walletAddress)}</span>
+                <span className="font-mono">{shortenAddress(walletAddress)}</span>
               </>
             ) : (
               <>
