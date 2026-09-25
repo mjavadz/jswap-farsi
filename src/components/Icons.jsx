@@ -143,3 +143,59 @@ export const PolygonIcon = ({ size = 24, className = '' }) => (
     <path d="M21.5 13.5l-4-2.3a3 3 0 00-3 0l-4 2.3a3 3 0 00-1.5 2.6v4.6a3 3 0 001.5 2.6l4 2.3a3 3 0 003 0l4-2.3a3 3 0 001.5-2.6v-4.6a3 3 0 00-1.5-2.6zm-1.5 5.5l-3.5 2a1 1 0 01-1 0l-3.5-2v-4a1 1 0 01.5-.9l3.5-2a1 1 0 011 0l3.5 2a1 1 0 01.5.9v4z" fill="#fff" />
   </svg>
 );
+
+export const BaseIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <circle cx="16" cy="16" r="16" fill="#0052FF" />
+    <path d="M16 7a9 9 0 100 18 9 9 0 000-18zm-2.8 11.8c-1.5 0-2.8-1.3-2.8-2.8s1.3-2.8 2.8-2.8c1.3 0 2.4.9 2.7 2.1h3.4c-.4-3-3-5.3-6.1-5.3-3.4 0-6.2 2.8-6.2 6.2s2.8 6.2 6.2 6.2c3.1 0 5.7-2.3 6.1-5.3h-3.4c-.3 1.2-1.4 2.1-2.7 2.1z" fill="#fff" />
+  </svg>
+);
+
+export const OptimismIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <circle cx="16" cy="16" r="16" fill="#FF0420" />
+    <path d="M10.8 12.2c-2.4 0-4.3 1.8-4.3 4.2 0 2.4 1.9 4.2 4.3 4.2 2.4 0 4.3-1.8 4.3-4.2 0-2.4-1.9-4.2-4.3-4.2zm0 6.2c-1.2 0-2.1-1-2.1-2 0-1 .9-2 2.1-2 1.2 0 2.1 1 2.1 2 0 1-.9 2-2.1 2zm8.5-6.2h3.4c2.4 0 4 1.5 4 3.7 0 2.2-1.6 3.7-4 3.7h-1.3v3h-2.1v-10.4zm2.1 5.3h1.3c1.2 0 1.9-.8 1.9-1.6 0-.8-.7-1.6-1.9-1.6h-1.3v3.2z" fill="#fff" />
+  </svg>
+);
+
+export const AvalancheIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <circle cx="16" cy="16" r="16" fill="#E84142" />
+    <path d="M18.8 9.3c.7-1.2 2.4-1.2 3.1 0l5.8 10.4c.7 1.2-.2 2.7-1.6 2.7h-3.8c-.8 0-1.5-.4-1.9-1.1l-4.7-8.5c-.3-.5-.3-1.1 0-1.6l3.1-1.9zm-8.2 5.5l5.2 9.4c.4.7-.1 1.6-.9 1.6H5.7c-1.4 0-2.3-1.5-1.6-2.7l7.4-13.3c.7-1.2 2.4-1.2 3.1 0l1.4 2.5-4.4 7.9c-.3.5-.7.8-1.2.8h-2.4c-.6 0-.9-.6-.6-1.1l3.2-5.1z" fill="#fff" />
+  </svg>
+);
+
+export const ZkSyncIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <circle cx="16" cy="16" r="16" fill="#000" stroke="#333" />
+    <path d="M7 11.5l8.5-5 8.5 5v9l-8.5 5-8.5-5v-9zm4.2 2.5v4l4.3 2.5 4.3-2.5v-4L15.5 11.5 11.2 14z" fill="#8C8DFC" />
+  </svg>
+);
+
+export const SuiIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <circle cx="16" cy="16" r="16" fill="#4DA2FF" />
+    <path d="M16 6.5C14.2 9.5 9 17.5 9 20.8a7 7 0 0014 0c0-3.3-5.2-11.3-7-14.3zm0 18.5a4.5 4.5 0 01-4.5-4.5c0-1.6 2-5.4 4.5-8.7 2.5 3.3 4.5 7.1 4.5 8.7a4.5 4.5 0 01-4.5 4.5z" fill="#fff" />
+  </svg>
+);
+
+export const AptosIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <circle cx="16" cy="16" r="16" fill="#202020" stroke="#333" />
+    <path d="M7 19.5h18l-3-3H10l-3 3zm2.5-5.5h13l-3-3h-7l-3 3zm3-5.5h7l-3.5-3.5L12.5 8.5zM6 25h20l-2.5-2.5H8.5L6 25z" fill="#fff" />
+  </svg>
+);
+
+export const LineaIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <circle cx="16" cy="16" r="16" fill="#121212" stroke="#222" />
+    <path d="M11 9h3v11h7v3H11V9z" fill="#61DFFF" />
+  </svg>
+);
+
+export const BlastIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <circle cx="16" cy="16" r="16" fill="#FCFC03" />
+    <path d="M11 8h6a4 4 0 013.5 6 4.5 4.5 0 01-3.5 8H11V8zm3 5h3a1.5 1.5 0 000-3h-3v3zm0 6h3.5a1.8 1.8 0 000-3.6H14V19z" fill="#000" />
+  </svg>
+);

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDown, Check } from 'lucide-react';
+import { ChevronDown, Check, Search } from 'lucide-react';
 import { 
   TonIcon, 
   SolanaIcon, 
@@ -7,12 +7,21 @@ import {
   TronIcon,
   BnbIcon,
   ArbitrumIcon,
-  PolygonIcon
+  PolygonIcon,
+  BaseIcon,
+  OptimismIcon,
+  AvalancheIcon,
+  ZkSyncIcon,
+  SuiIcon,
+  AptosIcon,
+  LineaIcon,
+  BlastIcon
 } from './Icons';
 import { SUPPORTED_CHAINS } from '../data/tokens';
 
 export default function NetworkDropdown({ activeChain, onSelectChain }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState('');
   const dropdownRef = useRef(null);
 
   const getChainIcon = (id, size = 18) => {
@@ -24,11 +33,26 @@ export default function NetworkDropdown({ activeChain, onSelectChain }) {
       case 'bsc': return <BnbIcon size={size} />;
       case 'arbitrum': return <ArbitrumIcon size={size} />;
       case 'polygon': return <PolygonIcon size={size} />;
-      default: return <TonIcon size={size} />;
+      case 'base': return <BaseIcon size={size} />;
+      case 'optimism': return <OptimismIcon size={size} />;
+      case 'avalanche': return <AvalancheIcon size={size} />;
+      case 'zksync': return <ZkSyncIcon size={size} />;
+      case 'sui': return <SuiIcon size={size} />;
+      case 'aptos': return <AptosIcon size={size} />;
+      case 'linea': return <LineaIcon size={size} />;
+      case 'blast': return <BlastIcon size={size} />;
+      default: return <EthereumIcon size={size} />;
     }
   };
 
   const activeChainObj = SUPPORTED_CHAINS.find(c => c.id === activeChain) || SUPPORTED_CHAINS[0];
+
+  const filteredChains = SUPPORTED_CHAINS.filter(c => 
+    c.name.toLowerCase().includes(search.toLowerCase()) ||
+    c.id.toLowerCase().includes(search.toLowerCase()) ||
+    c.mainDex?.toLowerCase().includes(search.toLowerCase()) ||
+    c.nativeSymbol.toLowerCase().includes(search.toLowerCase())
+  );
 
   // Close on click outside
   useEffect(() => {
@@ -42,19 +66,19 @@ export default function NetworkDropdown({ activeChain, onSelectChain }) {
   }, []);
 
   return (
-    <div className="relative inline-block text-right w-full max-w-xs mx-auto" ref={dropdownRef}>
+    <div className="relative inline-block text-right w-full max-w-sm mx-auto" ref={dropdownRef}>
       
       {/* Dropdown Trigger Button */}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl bg-dark-card border border-white/[0.08] hover:border-white/20 transition-all text-xs font-bold text-white shadow-sm"
+        className="w-full flex items-center justify-between gap-2.5 px-3.5 py-2.5 rounded-xl bg-dark-card border border-white/[0.08] hover:border-white/20 transition-all text-xs font-bold text-white shadow-sm"
       >
-        <div className="flex items-center gap-2.5 truncate">
+        <div className="flex items-center gap-2 truncate">
           <div className="shrink-0">{getChainIcon(activeChainObj.id, 18)}</div>
           <span className="truncate">{activeChainObj.name}</span>
-          <span className="text-[10px] text-zinc-400 font-normal hidden sm:inline">
-            ({activeChainObj.badge})
+          <span className="text-[10px] text-emerald-400 font-mono font-medium px-1.5 py-0.2 rounded bg-emerald-500/10 border border-emerald-500/20 hidden sm:inline">
+            {activeChainObj.mainDex}
           </span>
         </div>
 
@@ -66,42 +90,64 @@ export default function NetworkDropdown({ activeChain, onSelectChain }) {
 
       {/* Dropdown Menu List */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-1.5 z-50 bg-dark-card border border-white/[0.1] rounded-2xl shadow-2xl p-1.5 space-y-1 animate-fadeIn">
-          <div className="px-2.5 py-1 text-[10px] text-zinc-500 font-medium border-b border-white/[0.04]">
-            انتخاب شبکه مبادله و سواپ:
+        <div className="absolute top-full left-0 right-0 mt-1.5 z-50 bg-dark-card border border-white/[0.1] rounded-2xl shadow-2xl p-2 space-y-1.5 animate-fadeIn">
+          
+          {/* Search box for 15+ chains */}
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="جستجوی شبکه (یونی‌سواپ، بیس، سولانا...)"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-3 pr-8 py-1.5 rounded-lg bg-dark-surface border border-white/[0.08] text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 font-sans"
+              autoFocus
+            />
+            <Search size={14} className="absolute right-2.5 top-2 text-zinc-500" />
           </div>
 
-          <div className="max-h-72 overflow-y-auto space-y-0.5">
-            {SUPPORTED_CHAINS.map((ch) => {
-              const isSelected = ch.id === activeChain;
-              return (
-                <button
-                  key={ch.id}
-                  type="button"
-                  onClick={() => {
-                    onSelectChain(ch.id);
-                    setIsOpen(false);
-                  }}
-                  className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs transition-all ${
-                    isSelected
-                      ? 'bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20'
-                      : 'text-zinc-300 hover:text-white hover:bg-dark-surface'
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <div className="shrink-0">{getChainIcon(ch.id, 18)}</div>
-                    <div className="text-right">
-                      <span className="block font-bold text-xs">{ch.name}</span>
-                      <span className="block text-[10px] text-zinc-500">{ch.badge}</span>
+          <div className="max-h-72 overflow-y-auto space-y-1 divide-y divide-white/[0.04] pt-1">
+            {filteredChains.length > 0 ? (
+              filteredChains.map((ch) => {
+                const isSelected = ch.id === activeChain;
+                return (
+                  <button
+                    key={ch.id}
+                    type="button"
+                    onClick={() => {
+                      onSelectChain(ch.id);
+                      setIsOpen(false);
+                      setSearch('');
+                    }}
+                    className={`w-full flex items-center justify-between p-2 rounded-xl text-xs transition-all pt-1.5 ${
+                      isSelected
+                        ? 'bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20'
+                        : 'text-zinc-300 hover:text-white hover:bg-dark-surface'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 truncate">
+                      <div className="shrink-0">{getChainIcon(ch.id, 18)}</div>
+                      <div className="text-right truncate">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-bold text-xs">{ch.name}</span>
+                        </div>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-[10px] text-emerald-400 font-mono">دکس اصلی: {ch.mainDex}</span>
+                          <span className="text-[10px] text-zinc-500 hidden sm:inline">• {ch.badge}</span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
 
-                  {isSelected && (
-                    <Check size={16} className="text-emerald-400 shrink-0" />
-                  )}
-                </button>
-              );
-            })}
+                    {isSelected && (
+                      <Check size={16} className="text-emerald-400 shrink-0 mr-2" />
+                    )}
+                  </button>
+                );
+              })
+            ) : (
+              <div className="py-4 text-center text-xs text-zinc-500">
+                شبکه‌ای با این مشخصات یافت نشد.
+              </div>
+            )}
           </div>
         </div>
       )}

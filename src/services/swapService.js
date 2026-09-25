@@ -2,9 +2,20 @@ import { getTokenPrice } from './priceService';
 
 const PROTOCOL_NAMES = {
   ton: 'STON.fi & DeDust Aggregator',
-  solana: 'Jupiter Routing v6',
+  solana: 'Jupiter Routing v6 & Raydium',
   ethereum: 'Uniswap v3 / 1inch Router',
   tron: 'SunSwap v2.0 DEX',
+  bsc: 'PancakeSwap v3 Router',
+  base: 'Aerodrome & Uniswap v3',
+  arbitrum: 'Uniswap v3 & Camelot',
+  optimism: 'Velodrome & Uniswap v3',
+  polygon: 'QuickSwap & Uniswap v3',
+  avalanche: 'Trader Joe & Uniswap v3',
+  zksync: 'SyncSwap Router',
+  linea: 'Lynex & SyncSwap',
+  blast: 'Thruster & Uniswap v3',
+  sui: 'Cetus Protocol Aggregator',
+  aptos: 'Liquidswap & Pontem DEX',
 };
 
 const GAS_FEES = {
@@ -12,6 +23,17 @@ const GAS_FEES = {
   solana: { fee: '0.00005 SOL', usd: '$0.006' },
   ethereum: { fee: '0.0008 ETH', usd: '$2.15' },
   tron: { fee: '3.5 TRX', usd: '$0.52' },
+  bsc: { fee: '0.0005 BNB', usd: '$0.29' },
+  base: { fee: '0.00002 ETH', usd: '$0.05' },
+  arbitrum: { fee: '0.00004 ETH', usd: '$0.10' },
+  optimism: { fee: '0.00003 ETH', usd: '$0.08' },
+  polygon: { fee: '0.01 POL', usd: '$0.004' },
+  avalanche: { fee: '0.005 AVAX', usd: '$0.14' },
+  zksync: { fee: '0.00003 ETH', usd: '$0.08' },
+  linea: { fee: '0.00004 ETH', usd: '$0.10' },
+  blast: { fee: '0.00003 ETH', usd: '$0.08' },
+  sui: { fee: '0.002 SUI', usd: '$0.003' },
+  aptos: { fee: '0.001 APT', usd: '$0.008' },
 };
 
 export function getSwapQuote({ chain, fromToken, toToken, fromAmount, slippage = 0.5 }) {
@@ -67,12 +89,37 @@ export async function executeSwap({ chain, fromToken, toToken, quote, userAddres
   } else if (chain === 'solana') {
     txHash = base58Random(88);
     explorerUrl = `https://solscan.io/tx/${txHash}`;
-  } else if (chain === 'ethereum') {
-    txHash = '0x' + binToHex(32);
-    explorerUrl = `https://etherscan.io/tx/${txHash}`;
   } else if (chain === 'tron') {
     txHash = binToHex(32);
     explorerUrl = `https://tronscan.org/#/transaction/${txHash}`;
+  } else if (chain === 'bsc') {
+    txHash = '0x' + binToHex(32);
+    explorerUrl = `https://bscscan.com/tx/${txHash}`;
+  } else if (chain === 'base') {
+    txHash = '0x' + binToHex(32);
+    explorerUrl = `https://basescan.org/tx/${txHash}`;
+  } else if (chain === 'arbitrum') {
+    txHash = '0x' + binToHex(32);
+    explorerUrl = `https://arbiscan.io/tx/${txHash}`;
+  } else if (chain === 'optimism') {
+    txHash = '0x' + binToHex(32);
+    explorerUrl = `https://optimistic.etherscan.io/tx/${txHash}`;
+  } else if (chain === 'polygon') {
+    txHash = '0x' + binToHex(32);
+    explorerUrl = `https://polygonscan.com/tx/${txHash}`;
+  } else if (chain === 'avalanche') {
+    txHash = '0x' + binToHex(32);
+    explorerUrl = `https://snowtrace.io/tx/${txHash}`;
+  } else if (chain === 'sui') {
+    txHash = base58Random(44);
+    explorerUrl = `https://suiscan.xyz/mainnet/tx/${txHash}`;
+  } else if (chain === 'aptos') {
+    txHash = '0x' + binToHex(32);
+    explorerUrl = `https://explorer.aptoslabs.com/txn/${txHash}`;
+  } else {
+    // Default EVM (Ethereum, zkSync, Linea, Blast)
+    txHash = '0x' + binToHex(32);
+    explorerUrl = `https://etherscan.io/tx/${txHash}`;
   }
 
   return {
