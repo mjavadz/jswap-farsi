@@ -13,7 +13,10 @@ import {
   SolanaIcon, 
   TonIcon, 
   TronIcon, 
-  UsdtIcon 
+  UsdtIcon,
+  BnbIcon,
+  ArbitrumIcon,
+  PolygonIcon
 } from '../Icons';
 import TokenSelectorModal from './TokenSelectorModal';
 import { TOKENS } from '../../data/tokens';
@@ -128,6 +131,9 @@ export default function SwapCard({ onOpenWalletModal }) {
       case 'ton': return <TonIcon size={20} />;
       case 'trx': return <TronIcon size={20} />;
       case 'usdt': return <UsdtIcon size={20} />;
+      case 'bnb': return <BnbIcon size={20} />;
+      case 'arb': return <ArbitrumIcon size={20} />;
+      case 'pol': return <PolygonIcon size={20} />;
       default:
         return (
           <div className="w-5 h-5 rounded-full bg-zinc-800 flex items-center justify-center text-[10px] font-bold text-zinc-300">

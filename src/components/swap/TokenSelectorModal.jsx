@@ -5,7 +5,10 @@ import {
   SolanaIcon, 
   TonIcon, 
   TronIcon, 
-  UsdtIcon 
+  UsdtIcon,
+  BnbIcon,
+  ArbitrumIcon,
+  PolygonIcon
 } from '../Icons';
 import { getTokenPrice } from '../../services/priceService';
 import { formatToman } from '../../utils/format';
@@ -36,6 +39,9 @@ export default function TokenSelectorModal({
       case 'ton': return <TonIcon size={24} />;
       case 'trx': return <TronIcon size={24} />;
       case 'usdt': return <UsdtIcon size={24} />;
+      case 'bnb': return <BnbIcon size={24} />;
+      case 'arb': return <ArbitrumIcon size={24} />;
+      case 'pol': return <PolygonIcon size={24} />;
       default:
         return (
           <div className="w-6 h-6 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-[10px] font-bold text-zinc-300">

@@ -121,3 +121,25 @@ export const ShieldCheckIcon = ({ size = 20, className = '' }) => (
     <path d="m9 12 2 2 4-4" />
   </svg>
 );
+
+export const BnbIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <circle cx="16" cy="16" r="16" fill="#F3BA2F" />
+    <path d="M16 6.5l3.3 3.3-3.3 3.3-3.3-3.3L16 6.5zm-5.7 5.7l3.3 3.3-3.3 3.3-3.3-3.3 3.3-3.3zm11.4 0l3.3 3.3-3.3 3.3-3.3-3.3 3.3-3.3zm-5.7 3.8l1.9 1.9-1.9 1.9-1.9-1.9 1.9-1.9zm-5.7 5.7l3.3 3.3-3.3 3.3-3.3-3.3 3.3-3.3zm11.4 0l3.3 3.3-3.3 3.3-3.3-3.3 3.3-3.3zm-5.7 3.8l3.3 3.3-3.3 3.3-3.3-3.3 3.3-3.3z" fill="#fff" />
+  </svg>
+);
+
+export const ArbitrumIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <circle cx="16" cy="16" r="16" fill="#28A0F0" />
+    <path d="M16 7l7.5 13-3.8 2.2L16 16.3l-3.7 5.9-3.8-2.2L16 7z" fill="#fff" />
+    <path d="M16 18.5l2.2 3.5h-4.4l2.2-3.5z" fill="#28A0F0" />
+  </svg>
+);
+
+export const PolygonIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <circle cx="16" cy="16" r="16" fill="#8247E5" />
+    <path d="M21.5 13.5l-4-2.3a3 3 0 00-3 0l-4 2.3a3 3 0 00-1.5 2.6v4.6a3 3 0 001.5 2.6l4 2.3a3 3 0 003 0l4-2.3a3 3 0 001.5-2.6v-4.6a3 3 0 00-1.5-2.6zm-1.5 5.5l-3.5 2a1 1 0 01-1 0l-3.5-2v-4a1 1 0 01.5-.9l3.5-2a1 1 0 011 0l3.5 2a1 1 0 01.5.9v4z" fill="#fff" />
+  </svg>
+);

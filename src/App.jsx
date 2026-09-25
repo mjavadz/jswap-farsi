@@ -15,6 +15,7 @@ import {
   EthereumIcon, 
   TronIcon 
 } from './components/Icons';
+import NetworkDropdown from './components/NetworkDropdown';
 import { Clock, ShieldCheck, CreditCard } from 'lucide-react';
 
 export default function App() {
@@ -64,24 +65,10 @@ export default function App() {
 
         {/* Tab 1: Multi-Chain Crypto Swap */}
         {activeTab === 'swap' && (
-          <div className="animate-fadeIn">
-            {/* Minimal Chain Switcher */}
-            <div className="flex items-center justify-center gap-1 mb-5 p-1 max-w-fit mx-auto bg-dark-card border border-white/[0.06] rounded-xl">
-              {chainsList.map((ch) => (
-                <button
-                  key={ch.id}
-                  type="button"
-                  onClick={() => setActiveChain(ch.id)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    activeChain === ch.id 
-                      ? 'bg-dark-surface border border-white/[0.08] text-white shadow-sm' 
-                      : 'text-zinc-400 hover:text-white'
-                  }`}
-                >
-                  {ch.icon}
-                  <span>{ch.name.split(' ')[0]}</span>
-                </button>
-              ))}
+          <div className="animate-fadeIn space-y-4">
+            {/* Complete Network Dropdown Switcher */}
+            <div className="flex justify-center">
+              <NetworkDropdown activeChain={activeChain} onSelectChain={(id) => setActiveChain(id)} />
             </div>
 
             <SwapCard onOpenWalletModal={() => setIsWalletModalOpen(true)} />
