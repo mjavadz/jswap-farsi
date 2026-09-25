@@ -175,7 +175,7 @@ export default function StarsDesk({ onOrderCreated }) {
 
         {/* Validation Error Banner */}
         {validationError && (
-          <div className="mt-4 p-3.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-xs font-bold flex items-center gap-2 animate-fadeIn">
+          <div className="mt-4 p-3 rounded-lg bg-destructiveSoft border border-destructive/30 text-destructive text-xs font-semibold flex items-center gap-2 animate-fade-in">
             <HelpCircle size={16} />
             <span>{validationError}</span>
           </div>

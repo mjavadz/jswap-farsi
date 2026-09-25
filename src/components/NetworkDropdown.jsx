@@ -90,7 +90,7 @@ export default function NetworkDropdown({ activeChain, onSelectChain }) {
 
       {/* Dropdown Menu List */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-1.5 z-50 bg-dark-card border border-white/[0.1] rounded-2xl shadow-2xl p-2 space-y-1.5 animate-fadeIn">
+        <div className="absolute top-full left-0 right-0 mt-1.5 z-50 bg-card border border-border rounded-2xl shadow-2xl p-2 space-y-1.5 animate-fade-in">
           
           {/* Search box for 15+ chains */}
           <div className="relative">

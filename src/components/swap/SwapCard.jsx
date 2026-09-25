@@ -37,7 +37,6 @@ export default function SwapCard({ onOpenWalletModal }) {
     return TOKENS[activeChain] || [];
   }, [activeChain]);
 
-  // Selected Tokens
   const [fromToken, setFromToken] = useState(currentChainTokens[0] || null);
   const [toToken, setToToken] = useState(currentChainTokens[1] || null);
 
@@ -52,16 +51,13 @@ export default function SwapCard({ onOpenWalletModal }) {
   const [showSettings, setShowSettings] = useState(false);
   const [selectorTarget, setSelectorTarget] = useState(null);
 
-  // Execution State
   const [isSwapping, setIsSwapping] = useState(false);
   const [swapResult, setSwapResult] = useState(null);
   const [swapError, setSwapError] = useState(null);
 
-  // Dynamic user balances for selected tokens
   const fromBalance = getTokenBalance(fromToken?.symbol);
   const toBalance = getTokenBalance(toToken?.symbol);
 
-  // Calculate quote
   const quote = useMemo(() => {
     return getSwapQuote({
       chain: activeChain,
@@ -72,12 +68,10 @@ export default function SwapCard({ onOpenWalletModal }) {
     });
   }, [activeChain, fromToken, toToken, fromAmount, slippage]);
 
-  // Validate balance
   const numFromAmount = Number(fromAmount);
   const numFromBalance = Number(fromBalance);
   const isInsufficientBalance = isConnected && numFromAmount > 0 && numFromAmount > numFromBalance;
 
-  // Invert From/To
   const handleInvert = () => {
     const temp = fromToken;
     setFromToken(toToken);
@@ -87,14 +81,12 @@ export default function SwapCard({ onOpenWalletModal }) {
     }
   };
 
-  // Max Button
   const handleSetMax = () => {
     if (numFromBalance > 0) {
       setFromAmount(String(numFromBalance));
     }
   };
 
-  // Swap action trigger
   const handlePerformSwap = async () => {
     if (!isConnected) {
       onOpenWalletModal();
@@ -117,7 +109,7 @@ export default function SwapCard({ onOpenWalletModal }) {
       setSwapResult(res);
       if (refetchBalances) refetchBalances();
     } catch (err) {
-      setSwapError(err.message || 'خطا در اجرای سواپ در بلاکچین');
+      setSwapError(err.message || 'خطا در اجرای سواپ');
     } finally {
       setIsSwapping(false);
     }
@@ -126,17 +118,17 @@ export default function SwapCard({ onOpenWalletModal }) {
   const renderTokenBadgeIcon = (token) => {
     if (!token) return null;
     switch (token.icon) {
-      case 'eth': return <EthereumIcon size={20} />;
-      case 'sol': return <SolanaIcon size={20} />;
-      case 'ton': return <TonIcon size={20} />;
-      case 'trx': return <TronIcon size={20} />;
-      case 'usdt': return <UsdtIcon size={20} />;
-      case 'bnb': return <BnbIcon size={20} />;
-      case 'arb': return <ArbitrumIcon size={20} />;
-      case 'pol': return <PolygonIcon size={20} />;
+      case 'eth': return <EthereumIcon size={18} />;
+      case 'sol': return <SolanaIcon size={18} />;
+      case 'ton': return <TonIcon size={18} />;
+      case 'trx': return <TronIcon size={18} />;
+      case 'usdt': return <UsdtIcon size={18} />;
+      case 'bnb': return <BnbIcon size={18} />;
+      case 'arb': return <ArbitrumIcon size={18} />;
+      case 'pol': return <PolygonIcon size={18} />;
       default:
         return (
-          <div className="w-5 h-5 rounded-full bg-zinc-800 flex items-center justify-center text-[10px] font-bold text-zinc-300">
+          <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[10px] font-bold text-fgSubtle">
             {token.symbol[0]}
           </div>
         );
@@ -144,26 +136,26 @@ export default function SwapCard({ onOpenWalletModal }) {
   };
 
   const getButtonText = () => {
-    if (isSwapping) return 'در حال ارسال و امضای تراکنش…';
-    if (!isConnected) return 'اتصال کیف پول جهت سواپ';
-    if (!fromAmount || numFromAmount <= 0) return 'مقدار مورد نظر را وارد کنید';
-    if (isInsufficientBalance) return `موجودی ناکافی است (${fromBalance} ${fromToken?.symbol})`;
-    return `سواپ ${fromToken?.symbol} به ${toToken?.symbol}`;
+    if (isSwapping) return 'در حال ارسال تراکنش…';
+    if (!isConnected) return 'اتصال کیف پول برای سواپ';
+    if (!fromAmount || numFromAmount <= 0) return 'مقدار را وارد کنید';
+    if (isInsufficientBalance) return `موجودی ناکافی (${fromBalance} ${fromToken?.symbol})`;
+    return `سواپ ${fromToken?.symbol} → ${toToken?.symbol}`;
   };
 
   const isButtonDisabled = isSwapping || (isConnected && (!fromAmount || numFromAmount <= 0 || isInsufficientBalance));
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="w-full">
       
       {/* Minimal Swap Card */}
-      <div className="bg-dark-card border border-white/[0.08] rounded-2xl p-4 sm:p-5 shadow-xl relative">
+      <div className="card card-hover p-4 sm:p-5">
         
         {/* Card Header */}
-        <div className="flex items-center justify-between pb-3.5 mb-3.5 border-b border-white/[0.06]">
+        <div className="flex items-center justify-between pb-3 mb-3 border-b border-border">
           <div>
-            <h2 className="text-sm font-bold text-white">سواپ ارز دیجیتال</h2>
-            <span className="text-[11px] text-zinc-400">شبکه {activeChain.toUpperCase()}</span>
+            <h2 className="text-sm font-semibold text-fg">سواپ ارز دیجیتال</h2>
+            <span className="text-xs text-fgSubtle">{activeChain.toUpperCase()}</span>
           </div>
 
           <button
@@ -171,32 +163,33 @@ export default function SwapCard({ onOpenWalletModal }) {
             onClick={() => setShowSettings(!showSettings)}
             className={`p-1.5 rounded-lg border transition-all ${
               showSettings 
-                ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400' 
-                : 'bg-dark-surface border-white/[0.06] text-zinc-400 hover:text-white'
+                ? 'bg-accentSoft border-accent/30 text-accent' 
+                : 'bg-muted border-border text-fgSubtle hover:text-fg'
             }`}
-            title="تنظیمات تلرانس قیمت (Slippage)"
+            title="تنظیمات تلرانس (Slippage)"
+            aria-label="Slippage settings"
           >
-            <Settings2 size={16} />
+            <Settings2 size={14} />
           </button>
         </div>
 
         {/* Slippage Settings Drawer */}
         {showSettings && (
-          <div className="mb-3 p-3 rounded-xl bg-dark-surface border border-white/[0.06] space-y-2 text-xs animate-fadeIn">
-            <div className="flex items-center justify-between text-zinc-300">
-              <span>حد مجاز نوسان قیمت (Slippage):</span>
-              <span className="text-emerald-400 font-mono font-bold">{slippage}%</span>
+          <div className="settings-drawer mb-3 space-y-2">
+            <div className="flex items-center justify-between text-fgMuted">
+              <span className="font-semibold text-xs">تلرانس قیمت (Slippage):</span>
+              <span className="text-accent font-mono font-bold">{slippage}%</span>
             </div>
-            <div className="grid grid-cols-4 gap-1.5">
+            <div className="grid grid-cols-4 gap-1">
               {['0.1', '0.5', '1.0'].map((val) => (
                 <button
                   key={val}
                   type="button"
                   onClick={() => setSlippage(val)}
-                  className={`py-1 rounded-lg text-xs font-bold transition-all ${
+                  className={`py-1 rounded-md text-xs font-bold transition-all ${
                     slippage === val 
-                      ? 'bg-emerald-500 text-black font-extrabold' 
-                      : 'bg-dark-card border border-white/[0.08] text-zinc-300 hover:bg-dark-hover'
+                      ? 'bg-accent text-bg font-extrabold' 
+                      : 'bg-muted border border-border text-fgSubtle hover:bg-border hover:text-fg'
                   }`}
                 >
                   {val}%
@@ -207,26 +200,24 @@ export default function SwapCard({ onOpenWalletModal }) {
                 placeholder="سفارشی"
                 value={['0.1', '0.5', '1.0'].includes(slippage) ? '' : slippage}
                 onChange={(e) => setSlippage(e.target.value.replace(/[^0-9.]/g, ''))}
-                className="w-full text-center py-1 rounded-lg bg-dark-card border border-white/[0.08] text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 font-bold"
+                className="w-full text-center py-1 rounded-md bg-muted border border-border text-xs text-fg placeholder-fgSubtle focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent font-bold"
               />
             </div>
           </div>
         )}
 
-        {/* Box 1: FROM Input */}
-        <div className="p-3.5 rounded-xl bg-dark-surface/90 border border-white/[0.06] focus-within:border-white/20 transition-colors">
-          <div className="flex items-center justify-between text-[11px] text-zinc-400 mb-1.5">
-            <span>پرداخت می‌کنید:</span>
+        {/* FROM Input */}
+        <div className="p-3 rounded-lg bg-muted/50 border border-border focus-within:border-accent/40 transition-colors">
+          <div className="flex items-center justify-between text-xs text-fgSubtle mb-1">
+            <span>پرداخت می‌کنید</span>
             <div className="flex items-center gap-1.5">
               <span>موجودی:</span>
-              <span className="font-mono text-zinc-200" dir="ltr">
-                {fromBalance}
-              </span>
+              <span className="font-mono text-fg" dir="ltr">{fromBalance}</span>
               {isConnected && numFromBalance > 0 && (
                 <button 
                   type="button" 
                   onClick={handleSetMax}
-                  className="font-bold text-emerald-400 hover:underline px-1 rounded bg-emerald-500/10 text-[10px]"
+                  className="font-semibold text-accent hover:underline px-1 rounded text-[10px]"
                 >
                   حداکثر
                 </button>
@@ -241,48 +232,46 @@ export default function SwapCard({ onOpenWalletModal }) {
               placeholder="0"
               value={fromAmount}
               onChange={(e) => setFromAmount(e.target.value.replace(/[^0-9.]/g, ''))}
-              className="w-full bg-transparent text-2xl font-bold text-white placeholder-zinc-600 focus:outline-none font-mono"
+              className="w-full bg-transparent text-2xl font-bold text-fg placeholder-fgSubtle focus:outline-none font-mono"
+              aria-label="مقدار ارسال"
             />
 
             <button
               type="button"
               onClick={() => setSelectorTarget('from')}
-              className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-dark-card border border-white/[0.08] hover:border-white/20 transition-all shrink-0"
+              className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-card border border-border hover:border-accent/40 transition-all shrink-0"
             >
               {renderTokenBadgeIcon(fromToken)}
-              <span className="font-bold text-xs text-white">
-                {fromToken?.symbol || 'انتخاب'}
-              </span>
-              <ChevronDown size={14} className="text-zinc-400" />
+              <span className="font-bold text-xs text-fg">{fromToken?.symbol || 'انتخاب'}</span>
+              <ChevronDown size={12} className="text-fgSubtle" />
             </button>
           </div>
 
-          <div className="mt-1 text-[11px] text-zinc-500">
-            ≈ {quote ? `$${quote.fromValueUSD} (${formatToman(Number(quote.fromValueUSD) * 66000)})` : '$0.00'}
+          <div className="mt-1 text-xs text-fgSubtle">
+            ≈ {quote ? `$${quote.fromValueUSD} (${formatToman(Math.round(Number(quote.fromValueUSD) * 66000))})` : '$0.00'}
           </div>
         </div>
 
-        {/* Invert Swap Button */}
-        <div className="relative my-[-8px] z-10 flex justify-center">
+        {/* Invert Button */}
+        <div className="relative my-[-6px] z-10 flex justify-center">
           <button
             type="button"
             onClick={handleInvert}
-            className="w-8 h-8 rounded-lg bg-dark-card border border-white/[0.1] hover:border-emerald-500 text-zinc-300 hover:text-emerald-400 flex items-center justify-center transition-all shadow-sm active:scale-95"
+            className="w-7 h-7 rounded-md bg-card border border-border hover:border-accent/40 text-fgSubtle hover:text-accent flex items-center justify-center transition-all active:scale-95"
             title="جابجایی مبدا و مقصد"
+            aria-label="Swap tokens"
           >
-            <ArrowDownUp size={14} />
+            <ArrowDownUp size={12} />
           </button>
         </div>
 
-        {/* Box 2: TO Output */}
-        <div className="p-3.5 rounded-xl bg-dark-surface/90 border border-white/[0.06] transition-colors">
-          <div className="flex items-center justify-between text-[11px] text-zinc-400 mb-1.5">
-            <span>دریافت می‌کنید:</span>
+        {/* TO Output */}
+        <div className="p-3 rounded-lg bg-muted/50 border border-border transition-colors">
+          <div className="flex items-center justify-between text-xs text-fgSubtle mb-1">
+            <span>دریافت می‌کنید</span>
             <div className="flex items-center gap-1.5">
               <span>موجودی:</span>
-              <span className="font-mono text-zinc-300" dir="ltr">
-                {toBalance}
-              </span>
+              <span className="font-mono text-fgMuted" dir="ltr">{toBalance}</span>
             </div>
           </div>
 
@@ -292,49 +281,44 @@ export default function SwapCard({ onOpenWalletModal }) {
               readOnly
               placeholder="0"
               value={quote ? quote.toAmount : ''}
-              className="w-full bg-transparent text-2xl font-bold text-emerald-400 placeholder-zinc-600 focus:outline-none font-mono"
+              className="w-full bg-transparent text-2xl font-bold text-accent placeholder-fgSubtle focus:outline-none font-mono"
+              aria-label="مقدار دریافت"
             />
 
             <button
               type="button"
               onClick={() => setSelectorTarget('to')}
-              className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-dark-card border border-white/[0.08] hover:border-white/20 transition-all shrink-0"
+              className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-card border border-border hover:border-accent/40 transition-all shrink-0"
             >
               {renderTokenBadgeIcon(toToken)}
-              <span className="font-bold text-xs text-white">
-                {toToken?.symbol || 'انتخاب'}
-              </span>
-              <ChevronDown size={14} className="text-zinc-400" />
+              <span className="font-bold text-xs text-fg">{toToken?.symbol || 'انتخاب'}</span>
+              <ChevronDown size={12} className="text-fgSubtle" />
             </button>
           </div>
 
-          <div className="mt-1 text-[11px] text-zinc-500">
-            ≈ {quote ? `$${quote.toValueUSD} (${formatToman(Number(quote.toValueUSD) * 66000)})` : '$0.00'}
+          <div className="mt-1 text-xs text-fgSubtle">
+            ≈ {quote ? `$${quote.toValueUSD} (${formatToman(Math.round(Number(quote.toValueUSD) * 66000))})` : '$0.00'}
           </div>
         </div>
 
-        {/* Rate & Route Information */}
+        {/* Rate & Route Info */}
         {quote && (
-          <div className="mt-3 p-3 rounded-xl bg-dark-surface/40 border border-white/[0.04] text-[11px] space-y-1.5 text-zinc-400">
+          <div className="mt-3 p-3 rounded-lg bg-muted/30 border border-border/50 text-xs space-y-1 text-fgSubtle">
             <div className="flex justify-between items-center">
               <span>نرخ لحظه‌ای:</span>
-              <span className="font-mono text-zinc-200" dir="ltr">
-                1 {fromToken?.symbol} = {quote.rate} {toToken?.symbol}
-              </span>
+              <span className="font-mono text-fg" dir="ltr">1 {fromToken?.symbol} = {quote.rate} {toToken?.symbol}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span>مسیر نقدینگی:</span>
-              <span className="text-emerald-400 font-semibold">{quote.protocol}</span>
+              <span>مسیر:</span>
+              <span className="text-accent font-semibold">{quote.protocol}</span>
             </div>
             <div className="flex justify-between items-center">
               <span>حداقل دریافتی:</span>
-              <span className="font-mono text-zinc-300" dir="ltr">
-                {quote.minReceived} {toToken?.symbol}
-              </span>
+              <span className="font-mono text-fgMuted" dir="ltr">{quote.minReceived} {toToken?.symbol}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span>کارمزد تخمینی شبکه:</span>
-              <span className="text-zinc-300 font-mono" dir="ltr">{quote.gasFee.fee} ({quote.gasFee.usd})</span>
+              <span>کارمزد شبکه:</span>
+              <span className="font-mono text-fgMuted" dir="ltr">{quote.gasFee.fee} ({quote.gasFee.usd})</span>
             </div>
           </div>
         )}
@@ -345,20 +329,20 @@ export default function SwapCard({ onOpenWalletModal }) {
             type="button"
             disabled={isButtonDisabled}
             onClick={handlePerformSwap}
-            className={`w-full py-3.5 rounded-xl font-bold text-sm transition-all duration-150 flex items-center justify-center gap-2 ${
+            className={`w-full py-3 rounded-lg font-semibold text-sm transition-all duration-150 flex items-center justify-center gap-2 ${
               !isConnected
-                ? 'bg-emerald-500 hover:bg-emerald-400 text-black shadow-sm'
+                ? 'btn-primary'
                 : isInsufficientBalance
-                ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed border border-white/[0.05]'
+                ? 'bg-muted/50 text-fgSubtle cursor-not-allowed border border-border/50'
                 : !fromAmount || numFromAmount <= 0
-                ? 'bg-dark-surface border border-white/[0.06] text-zinc-500 cursor-not-allowed'
-                : 'bg-emerald-500 hover:bg-emerald-400 text-black active:scale-[0.98]'
+                ? 'bg-muted/50 text-fgSubtle cursor-not-allowed border border-border/50'
+                : 'btn-primary'
             }`}
           >
             {isSwapping ? (
               <>
-                <RefreshCw size={16} className="animate-spin" />
-                <span>در حال ارسال تراکنش…</span>
+                <RefreshCw size={14} className="animate-spin" />
+                <span>در حال ارسال…</span>
               </>
             ) : (
               <span>{getButtonText()}</span>
@@ -389,25 +373,25 @@ export default function SwapCard({ onOpenWalletModal }) {
 
       {/* Swap Success Modal */}
       {swapResult && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-          <div className="w-full max-w-sm bg-dark-card border border-white/[0.1] rounded-2xl p-5 text-center space-y-3.5 shadow-2xl">
-            <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto text-emerald-400">
-              <CheckCircle2 size={28} />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="w-full max-w-sm bg-card border border-border rounded-xl p-5 text-center space-y-3 shadow-lg animate-scale-in">
+            <div className="w-10 h-10 rounded-full bg-accentSoft border border-accent/30 flex items-center justify-center mx-auto text-accent">
+              <CheckCircle2 size={24} />
             </div>
 
             <div>
-              <h3 className="text-base font-bold text-white">تراکنش با موفقیت انجام شد</h3>
-              <p className="text-xs text-zinc-400 mt-0.5">دارایی به کیف‌پول شما واریز گردید.</p>
+              <h3 className="text-sm font-bold text-fg">تراکنش انجام شد</h3>
+              <p className="text-xs text-fgSubtle mt-0.5">دارایی به کیف‌پول شما واریز گردید.</p>
             </div>
 
-            <div className="p-3 bg-dark-surface rounded-xl border border-white/[0.06] text-xs space-y-1 text-right font-mono" dir="ltr">
-              <div className="text-zinc-400 flex justify-between">
+            <div className="p-3 bg-muted rounded-lg border border-border text-xs space-y-1 text-right font-mono" dir="ltr">
+              <div className="text-fgSubtle flex justify-between">
                 <span className="font-sans">سواپ:</span>
-                <span className="text-white font-bold">{swapResult.fromAmount} {swapResult.fromToken} ➔ {swapResult.toAmount} {swapResult.toToken}</span>
+                <span className="text-fg font-bold">{swapResult.fromAmount} {swapResult.fromToken} → {swapResult.toAmount} {swapResult.toToken}</span>
               </div>
-              <div className="text-zinc-400 flex justify-between">
-                <span className="font-sans">هش تراکنش:</span>
-                <span className="text-emerald-400 truncate max-w-[160px]">{swapResult.txHash}</span>
+              <div className="text-fgSubtle flex justify-between">
+                <span className="font-sans">هش:</span>
+                <span className="text-accent truncate max-w-[160px]">{swapResult.txHash}</span>
               </div>
             </div>
 
@@ -416,10 +400,10 @@ export default function SwapCard({ onOpenWalletModal }) {
                 href={swapResult.explorerUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 py-2 px-3 rounded-xl bg-dark-surface hover:bg-dark-hover border border-white/[0.08] text-xs font-bold text-zinc-300 flex items-center justify-center gap-1.5 transition-colors"
+                className="flex-1 py-2 px-3 rounded-lg bg-muted hover:bg-border border border-border text-xs font-bold text-fgMuted flex items-center justify-center gap-1.5 transition-colors"
               >
                 <span>اکسپلورر</span>
-                <ExternalLink size={12} />
+                <ExternalLink size={10} />
               </a>
               <button
                 type="button"
@@ -427,7 +411,7 @@ export default function SwapCard({ onOpenWalletModal }) {
                   setSwapResult(null);
                   setFromAmount('');
                 }}
-                className="flex-1 py-2 px-3 rounded-xl bg-emerald-500 text-black text-xs font-bold hover:bg-emerald-400 transition-colors"
+                className="flex-1 py-2 px-3 rounded-lg btn-primary text-xs"
               >
                 بستن
               </button>

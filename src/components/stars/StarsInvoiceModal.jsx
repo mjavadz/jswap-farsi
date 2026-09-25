@@ -71,167 +71,167 @@ export default function StarsInvoiceModal({ order, isOpen, onClose, onOrderUpdat
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-      <div 
-        className="w-full max-w-lg bg-dark-card border border-dark-border rounded-3xl shadow-2xl overflow-hidden animate-scaleUp max-h-[92vh] flex flex-col"
-        onClick={(e) => e.stopPropagation()}
-      >
-        
-        {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-dark-border bg-dark-surface/60">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-accent-gold/15 border border-accent-gold/40 flex items-center justify-center text-accent-gold">
-              <StarsIcon size={20} />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-base font-extrabold text-white">فاکتور خرید استارز تلگرام</h3>
-                <span className="text-xs px-2 py-0.5 rounded-full font-mono font-bold bg-dark-bg text-slate-300 border border-dark-border">
-                  {order.id}
-                </span>
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+        <div 
+          className="w-full max-w-lg bg-card border border-border rounded-xl shadow-lg overflow-hidden animate-scale-in max-h-[92vh] flex flex-col"
+          onClick={(e) => e.stopPropagation()}
+        >
+       
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 border-b border-border bg-muted/30">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-accentSoft border border-accent/30 flex items-center justify-center text-accent">
+                <StarsIcon size={18} />
               </div>
-              <p className="text-xs text-slate-400">حساب دریافت‌کننده: <strong className="text-white">{order.username}</strong></p>
-            </div>
-          </div>
-          <button 
-            type="button" 
-            onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-dark-hover transition-colors"
-          >
-            <X size={18} />
-          </button>
-        </div>
-
-        {/* Scrollable Body */}
-        <div className="p-5 space-y-4 overflow-y-auto">
-          
-          {/* Status Alert Banner */}
-          {currentStatus === 'completed' ? (
-            <div className="p-4 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 flex items-center gap-3 animate-fadeIn">
-              <CheckCircle2 size={24} className="shrink-0" />
               <div>
-                <strong className="text-sm font-bold block">پرداخت با موفقیت تایید شد!</strong>
-                <p className="text-xs text-emerald-300/80 mt-0.5">
-                  تعداد {toPersianDigits(order.stars)} استارز به آیدی {order.username} واریز گردید.
+                <div className="flex items-center gap-2">
+                  <h3 className="text-sm font-bold text-fg">فاکتور خرید استارز تلگرام</h3>
+                  <span className="text-xs px-2 py-0.5 rounded-full font-mono font-bold bg-muted text-fgSubtle border border-border">
+                    {order.id}
+                  </span>
+                </div>
+                <p className="text-xs text-fgMuted">حساب دریافت‌کننده: <strong className="text-fg">{order.username}</strong></p>
+              </div>
+            </div>
+            <button 
+              type="button" 
+              onClick={onClose}
+              className="p-1.5 rounded-lg text-fgSubtle hover:text-fg hover:bg-muted transition-colors"
+            >
+              <X size={18} />
+            </button>
+          </div>
+
+          {/* Modal Content */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          
+            {/* Pricing Summary */}
+            <div className="p-3 rounded-lg bg-accentSoft border border-accent/30 text-accent flex items-center gap-3 animate-fade-in">
+              <Sparkles size={20} />
+              <div>
+                <p className="text-xs font-semibold">مبلغ دقیق جهت انتقال ({order.method.name}):</p>
+                <p className="font-mono text-xl font-bold" dir="ltr">
+                  {order.pricing.cryptoAmount} {order.method.symbol}
                 </p>
               </div>
             </div>
-          ) : timeLeft === 0 ? (
-            <div className="p-3.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 flex items-center gap-2 text-xs font-bold">
-              <AlertCircle size={18} />
-              <span>مهلت ۲۰ دقیقه‌ای این پیش‌فاکتور منقضی شد. لطفاً فاکتور جدید ثبت فرمایید.</span>
-            </div>
-          ) : (
-            <div className="flex items-center justify-between p-3 rounded-xl bg-dark-surface border border-accent-gold/30 text-xs">
-              <div className="flex items-center gap-2 text-accent-gold font-bold">
-                <Clock size={16} />
-                <span>مهلت واریز و قفل قیمت:</span>
+
+            {/* Timer */}
+            <div className="p-3 rounded-lg bg-muted border border-border">
+              <div className="flex items-center justify-between text-xs text-fgSubtle mb-2">
+                <span className="font-semibold">زمان باقی‌مانده:</span>
+                <span className="font-mono text-accent" dir="ltr">
+                  {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
+                </span>
               </div>
-              <div className="font-mono text-sm font-extrabold text-white" dir="ltr">
-                {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+              <div className="w-full h-1.5 bg-border rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-accent transition-all duration-1000 ease-linear"
+                  style={{ width: `${(timeLeft / (20 * 60)) * 100}%` }}
+                />
               </div>
             </div>
-          )}
 
-          {/* Amount to pay box */}
-          <div className="p-4 rounded-2xl bg-dark-surface/90 border border-dark-border text-center space-y-2">
-            <span className="text-xs text-slate-400 font-bold block">مبلغ دقیق جهت انتقال ({order.method.name}):</span>
-            
-            <div className="flex items-center justify-center gap-2">
-              <span className="font-mono text-3xl font-black text-accent-gold" dir="ltr">
-                {order.pricing.cryptoAmount} {order.method.symbol}
-              </span>
-              <button
-                type="button"
-                onClick={handleCopyAmount}
-                className="p-1.5 rounded-lg bg-dark-card border border-dark-border hover:border-slate-500 text-slate-300 hover:text-white transition-colors"
-                title="کپی مبلغ"
-              >
-                {copiedAmount ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
-              </button>
+            {/* Deposit Address Box */}
+            <div className="p-3 rounded-lg bg-muted/50 border border-border space-y-2">
+              <div className="flex items-center justify-between text-xs text-fgSubtle">
+                <span className="font-semibold">آدرس کیف‌پول مقصد ({order.method.network}):</span>
+                <button
+                  type="button"
+                  onClick={handleCopyAddress}
+                  className="p-1 rounded text-fgSubtle hover:text-accent"
+                  title="کپی آدرس"
+                >
+                  {copiedAddr ? <Check size={14} className="text-accent" /> : <Copy size={14} />}
+                </button>
+              </div>
+              <div className="flex items-center gap-2 p-2 rounded bg-card border border-border">
+                <span className="font-mono text-xs text-fg truncate flex-1" dir="ltr">
+                  {order.depositAddress}
+                </span>
+                <button
+                  type="button"
+                  onClick={handleCopyAddress}
+                  className="p-1.5 rounded bg-muted text-fgSubtle hover:text-fg"
+                  title="کپی آدرس"
+                >
+                  {copiedAddr ? <Check size={14} className="text-accent" /> : <Copy size={14} />}
+                </button>
+              </div>
             </div>
 
-            <div className="text-xs text-slate-400">
-              معادل {formatToman(order.pricing.totalToman)} • ({toPersianDigits(order.stars)} استارز)
+            {/* Amount to Send */}
+            <div className="p-3 rounded-lg bg-muted/50 border border-border space-y-2">
+              <div className="flex items-center justify-between text-xs text-fgSubtle">
+                <span className="font-semibold">مبلغ انتقال:</span>
+                <button
+                  type="button"
+                  onClick={handleCopyAmount}
+                  className="p-1 rounded text-fgSubtle hover:text-accent"
+                  title="کپی مقدار"
+                >
+                  {copiedAmount ? <Check size={14} className="text-accent" /> : <Copy size={14} />}
+                </button>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <span className="font-mono text-2xl font-bold text-fg" dir="ltr">
+                  {order.pricing.cryptoAmount} {order.method.symbol}
+                </span>
+              </div>
             </div>
+
+            {/* Telegram Link */}
+            <a
+              href={`https://t.me/${order.username.replace('@', '')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 p-3 rounded-lg bg-muted border border-border text-sm font-semibold text-fg hover:bg-border transition-colors"
+            >
+              <ArrowRight size={16} />
+              <span>انتقال به تلگرام جهت واریز استارز</span>
+              <ExternalLink size={14} />
+            </a>
+
+            {/* Payment Confirmation */}
+            {currentStatus === 'pending' ? (
+              <div className="space-y-3 pt-2 border-t border-border">
+                <input
+                  type="text"
+                  placeholder="هش تراکنش (TX Hash) - اختیاری"
+                  value={txHashInput}
+                  onChange={(e) => setTxHashInput(e.target.value)}
+                  className="input"
+                />
+                <button
+                  type="button"
+                  onClick={handleConfirmPayment}
+                  disabled={isVerifying}
+                  className="btn-primary w-full"
+                >
+                  {isVerifying ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                      <span>در حال تایید...</span>
+                    </>
+                  ) : (
+                    <span>تأیید پرداخت و تحویل استارز</span>
+                  )}
+                </button>
+              </div>
+            ) : (
+              <div className="p-3 rounded-lg bg-accentSoft border border-accent/30 text-accent flex items-center justify-center gap-2 animate-fade-in">
+                <CheckCircle2 size={20} />
+                <span className="font-semibold">تراکنش تایید و استارز تحویل داده شد</span>
+              </div>
+            )}
           </div>
 
-          {/* Deposit Address Box */}
-          <div className="p-4 rounded-2xl bg-dark-surface/90 border border-dark-border space-y-2">
-            <div className="flex items-center justify-between text-xs text-slate-400">
-              <span className="font-bold">آدرس کیف‌پول مقصد ({order.method.network}):</span>
-              <button
-                type="button"
-                onClick={handleCopyAddress}
-                className="flex items-center gap-1 text-accent-emerald hover:underline font-bold"
-              >
-                {copiedAddr ? <Check size={14} /> : <Copy size={14} />}
-                <span>{copiedAddr ? 'کپی شد' : 'کپی آدرس'}</span>
-              </button>
-            </div>
-
-            <div className="p-3 bg-dark-bg rounded-xl border border-dark-border/80 font-mono text-xs sm:text-sm text-slate-200 break-all select-all text-center" dir="ltr">
-              {order.depositAddress}
-            </div>
+          {/* Footer */}
+          <div className="p-4 border-t border-border bg-muted/30 space-y-2 text-xs text-fgSubtle">
+            <p>سفارش با مهلت <strong>۲۰ دقیقه</strong> اعتبار صادر شده است.</p>
+            <p>پس از انتقال، روی دکمه «تأیید پرداخت» بزنید تا استارز به حساب شما واریز شود.</p>
           </div>
-
-          {/* Transaction ID / Confirmation Section */}
-          {currentStatus !== 'completed' && timeLeft > 0 && (
-            <div className="p-4 rounded-2xl bg-dark-surface/40 border border-dark-border space-y-3">
-              <label className="text-xs font-bold text-slate-300 block">
-                کد رهگیری / هش تراکنش (اختیاری):
-              </label>
-              <input
-                type="text"
-                placeholder="TXID یا شناسه تراکنش را در صورت تمایل وارد کنید..."
-                value={txHashInput}
-                onChange={(e) => setTxHashInput(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-dark-bg border border-dark-border text-xs text-white placeholder-slate-500 focus:outline-none focus:border-accent-emerald font-mono"
-                dir="ltr"
-              />
-
-              <button
-                type="button"
-                disabled={isVerifying}
-                onClick={handleConfirmPayment}
-                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-accent-gold to-amber-600 hover:from-amber-500 hover:to-amber-700 text-dark-bg font-black text-sm transition-all shadow-glow-gold flex items-center justify-center gap-2"
-              >
-                {isVerifying ? (
-                  <>
-                    <span className="h-4 w-4 border-2 border-dark-bg border-t-transparent rounded-full animate-spin"></span>
-                    <span>در حال استعلام و تایید واریز در شبکه…</span>
-                  </>
-                ) : (
-                  <span>من وجه را واریز کردم (تایید نهایی)</span>
-                )}
-              </button>
-            </div>
-          )}
-
-          {/* Guarantee notice */}
-          <div className="p-3 rounded-xl bg-dark-bg/60 border border-dark-border/50 text-[11px] text-slate-400 space-y-1 leading-relaxed">
-            <p className="flex items-center gap-1.5 font-bold text-slate-300">
-              <Sparkles size={14} className="text-accent-gold" />
-              <span>پشتیبانی و تحویل آنی:</span>
-            </p>
-            <p>پس از ارسال رمزارز، استارز به طور مستقیم به ربات/اکانت تلگرام شما شارژ می‌شود. کد پیگیری شما ذخیره گردید.</p>
-          </div>
-
         </div>
-
-        {/* Footer */}
-        <div className="p-4 border-t border-dark-border bg-dark-surface/60 flex justify-between items-center">
-          <span className="text-xs text-slate-400">نیاز به راهنمایی دارید؟</span>
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-dark-card border border-dark-border hover:border-slate-500 text-xs font-bold text-white transition-colors"
-          >
-            بستن
-          </button>
-        </div>
-
       </div>
-    </div>
-  );
-}
+    );
+  }
