@@ -182,7 +182,7 @@ export default function IranToolkit() {
             onClick={() => setShowExchangesList(!showExchangesList)}
             className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-dark-surface border border-white/[0.08] hover:border-emerald-500/40 text-emerald-400 font-mono font-bold transition-all"
           >
-            <span>{formatToman(tomanRate)} تومان</span>
+            <span>{formatToman(tomanRate)}</span>
             <ChevronDown size={14} className={`transition-transform duration-200 ${showExchangesList ? 'rotate-180' : ''}`} />
           </button>
         </div>
@@ -201,7 +201,7 @@ export default function IranToolkit() {
                     {ex.name}
                   </span>
                   <span className="font-mono text-[11px] text-emerald-400 font-bold" dir="ltr">
-                    {formatToman(ex.price)} تومان
+                    {formatToman(ex.price)}
                   </span>
                 </div>
               ))}
