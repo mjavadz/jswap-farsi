@@ -37,8 +37,11 @@ export const SolanaIcon = ({ size = 24, className = '' }) => (
 
 export const TonIcon = ({ size = 24, className = '' }) => (
   <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
-    <circle cx="16" cy="16" r="16" fill="#0088CC" />
-    <path d="M23.3 10.2L8.7 15.6c-.9.4-.9 1.1-.2 1.3l3.7 1.2 8.7-5.5c.4-.3.8-.1.5.2l-7 6.4v.1l-.3 3.9c.4 0 .6-.2.8-.4l2-2 4.2 3.1c.8.4 1.3.2 1.5-.7l2.8-13.2c.3-1.1-.4-1.6-1.4-1.1z" fill="#fff" />
+    <circle cx="16" cy="16" r="16" fill="#0098EA" />
+    <path d="M16 6.5l8 4.6-8 14.4-8-14.4 8-4.6z" fill="#fff" />
+    <path d="M16 6.5v19l8-14.4-8-4.6z" fill="#EBF4FB" />
+    <path d="M16 11.2l5.5 3.2L16 23.5l-5.5-9.1 5.5-3.2z" fill="#0098EA" />
+    <path d="M16 11.2v12.3l5.5-9.1-5.5-3.2z" fill="#2CB5FF" />
   </svg>
 );
 
@@ -200,6 +203,124 @@ export const BlastIcon = ({ size = 24, className = '' }) => (
   </svg>
 );
 
+export const MetaMaskIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <path d="M28.2 4.4l-10.5 7.8 1.9-4.7L28.2 4.4z" fill="#E2761B" />
+    <path d="M3.8 4.4l10.4 7.8-1.9-4.7L3.8 4.4z" fill="#E4761B" />
+    <path d="M24.4 21.6l-2.8 4.3 6.1 1.7 1.8-6.1-5.1.1z" fill="#E4761B" />
+    <path d="M7.6 21.6l2.8 4.3-6.1 1.7-1.8-6.1 5.1.1z" fill="#E4761B" />
+    <path d="M10.2 14.2l-1.8 2.7 6.3.3-.2-6.8-4.3 3.8z" fill="#E4761B" />
+    <path d="M21.8 14.2l1.8 2.7-6.3.3.2-6.8 4.3 3.8z" fill="#E4761B" />
+    <path d="M10.4 25.9l3.6-1.8-3.1-2.4-.5 4.2z" fill="#E4761B" />
+    <path d="M21.6 25.9l-3.6-1.8 3.1-2.4.5 4.2z" fill="#E4761B" />
+    <path d="M18 24.1l3.6 1.8 6.1-1.7-2.8-4.3h-5.2l-1.7 4.2z" fill="#D7C1B3" />
+    <path d="M14 24.1l-3.6 1.8-6.1-1.7 2.8-4.3h5.2l1.7 4.2z" fill="#D7C1B3" />
+    <path d="M14.2 19.9l-4-2.8-1.8 2.7 5.2.1.6-1z" fill="#233447" />
+    <path d="M17.8 19.9l4-2.8 1.8 2.7-5.2.1-.6-1z" fill="#233447" />
+    <path d="M10.4 25.9l.5-4.2-3.3-.1 2.8 4.3z" fill="#CD6116" />
+    <path d="M21.6 25.9l-.5-4.2 3.3-.1-2.8 4.3z" fill="#CD6116" />
+    <path d="M23.6 17.1l-1.8-2.9-4.3 3.8 2.1 1.9 4-2.8z" fill="#CD6116" />
+    <path d="M8.4 17.1l1.8-2.9 4.3 3.8-2.1 1.9-4-2.8z" fill="#CD6116" />
+    <path d="M14.5 18l-4.3-3.8 4.3-6.7.2 6.8-.2 3.7z" fill="#E4751F" />
+    <path d="M17.5 18l4.3-3.8-4.3-6.7-.2 6.8.2 3.7z" fill="#E4751F" />
+  </svg>
+);
+
+export const PhantomIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <circle cx="16" cy="16" r="16" fill="#AB9FF2" />
+    <path d="M22.5 16c0-3.6-2.9-6.5-6.5-6.5S9.5 12.4 9.5 16c0 4.2 3 7.8 7.2 7.8 1.3 0 2-.6 2.5-1.2.4-.6.6-1.3 1.2-1.3.5 0 .9.5 1.1 1.1.6-.8 1-1.6 1-2.4z" fill="#fff" />
+    <circle cx="13.2" cy="15" r="1.3" fill="#AB9FF2" />
+    <circle cx="17.2" cy="15" r="1.3" fill="#AB9FF2" />
+  </svg>
+);
+
+export const SolflareIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <circle cx="16" cy="16" r="16" fill="#FC8C03" />
+    <path d="M16 7l2.5 6.5 6.5 2.5-6.5 2.5L16 25l-2.5-6.5L7 16l6.5-2.5L16 7z" fill="#fff" />
+  </svg>
+);
+
+export const TonkeeperIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <circle cx="16" cy="16" r="16" fill="#1C2D42" />
+    <path d="M16 7l6.5 3.8-6.5 11.7-6.5-11.7L16 7z" fill="#0098EA" />
+    <path d="M16 7v15.5l6.5-11.7L16 7z" fill="#2CB5FF" />
+    <path d="M16 10.8l4.5 2.6L16 20.8l-4.5-7.4 4.5-2.6z" fill="#fff" />
+  </svg>
+);
+
+export const TrustWalletIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <circle cx="16" cy="16" r="16" fill="#0500FF" />
+    <path d="M16 7s6 2.5 8 3.5c0 6.5-2.5 12-8 15-5.5-3-8-8.5-8-15 2-1 8-3.5 8-3.5z" fill="#fff" />
+    <path d="M16 9.5s4.5 1.8 6 2.6c0 5-1.9 9.2-6 11.4V9.5z" fill="#0500FF" />
+  </svg>
+);
+
+export const RabbyIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <circle cx="16" cy="16" r="16" fill="#8697FF" />
+    <path d="M11 11c0-2.2 1.8-4 4-4s4 1.8 4 4v4h-8v-4z" fill="#fff" />
+    <circle cx="13.5" cy="12" r="1" fill="#8697FF" />
+    <circle cx="16.5" cy="12" r="1" fill="#8697FF" />
+    <path d="M9 16c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2v6c0 2.2-1.8 4-4 4h-6c-2.2 0-4-1.8-4-4v-6z" fill="#fff" />
+  </svg>
+);
+
+export const TronLinkIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <circle cx="16" cy="16" r="16" fill="#231815" />
+    <path d="M16 6.5l8 4.5v10L16 25.5 8 21v-10l8-4.5z" fill="#FF1E38" />
+    <path d="M16 9.5l5.5 3.2v6.6L16 22.5 10.5 19.3v-6.6L16 9.5z" fill="#fff" />
+    <path d="M16 11.5l3.5 2v4L16 19.5 12.5 17.5v-4l3.5-2z" fill="#FF1E38" />
+  </svg>
+);
+
+export const SuiWalletIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <circle cx="16" cy="16" r="16" fill="#4DA2FF" />
+    <path d="M16 7c-2 3.5-7 11.5-7 14.8a7 7 0 0014 0c0-3.3-5-11.3-7-14.8z" fill="#fff" />
+  </svg>
+);
+
+export const PetraIcon = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className}>
+    <circle cx="16" cy="16" r="16" fill="#F03D3D" />
+    <path d="M11 8h7a5 5 0 010 10h-3v6h-4V8zm4 7h3a2 2 0 000-4h-3v4z" fill="#fff" />
+  </svg>
+);
+
+export const getWalletIcon = (walletId, size = 22) => {
+  switch (walletId) {
+    case 'metamask':
+      return <MetaMaskIcon size={size} />;
+    case 'rabby':
+      return <RabbyIcon size={size} />;
+    case 'trustwallet':
+      return <TrustWalletIcon size={size} />;
+    case 'phantom':
+      return <PhantomIcon size={size} />;
+    case 'solflare':
+      return <SolflareIcon size={size} />;
+    case 'tonkeeper':
+      return <TonkeeperIcon size={size} />;
+    case 'mytonwallet':
+      return <TonIcon size={size} />;
+    case 'tronlink':
+      return <TronLinkIcon size={size} />;
+    case 'suiet':
+    case 'suiwallet':
+      return <SuiWalletIcon size={size} />;
+    case 'petra':
+    case 'pontem':
+      return <PetraIcon size={size} />;
+    default:
+      return <WalletIcon size={size} />;
+  }
+};
+
 export const getChainIcon = (chainId, size = 20, className = '') => {
   switch (chainId) {
     case 'ethereum':
@@ -236,4 +357,6 @@ export const getChainIcon = (chainId, size = 20, className = '') => {
       return <EthereumIcon size={size} className={className} />;
   }
 };
+
+
 

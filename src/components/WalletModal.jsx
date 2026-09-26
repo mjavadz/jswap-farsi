@@ -7,30 +7,39 @@ import {
   ShieldCheck, 
   AlertCircle, 
   Sparkles, 
-  Info 
+  Info,
+  ChevronDown,
+  Layers
 } from 'lucide-react';
-import { getChainIcon } from './Icons';
+import { getChainIcon, getWalletIcon, ArbitrumIcon, BaseIcon, PolygonIcon } from './Icons';
 import { useWallet } from '../context/WalletContext';
-import { CHAINS, getChainById } from '../config/chains';
+import { getChainById } from '../config/chains';
 import { shortenAddress } from '../utils/format';
 
-// Standardized crypto chains in canonical industry order
-const ORDERED_CHAINS = [
-  { id: 'ethereum', name: 'اتریوم (ETH)' },
-  { id: 'solana', name: 'سولانا (SOL)' },
-  { id: 'ton', name: 'تون (TON)' },
-  { id: 'tron', name: 'ترون (TRX)' },
-  { id: 'bsc', name: 'بایننس (BNB)' },
-  { id: 'arbitrum', name: 'آربیتروم (ARB)' },
-  { id: 'base', name: 'بیس (Base)' },
-  { id: 'polygon', name: 'پالیگان (POL)' },
-  { id: 'avalanche', name: 'آوالانچ (AVAX)' },
-  { id: 'optimism', name: 'آپتیمیزم (OP)' },
-  { id: 'sui', name: 'سویی (SUI)' },
-  { id: 'aptos', name: 'آپتوس (APT)' },
-  { id: 'zksync', name: 'زد‌کی‌سینک (ZK)' },
-  { id: 'linea', name: 'لینیا (Linea)' },
-  { id: 'blast', name: 'بلاست (Blast)' },
+// Ethereum Layer 2 networks grouped into dropdown
+const ETH_L2_CHAINS = [
+  { id: 'arbitrum', name: 'آربیتروم (Arbitrum One)', symbol: 'ARB', desc: 'بزرگترین لایه دوم اتریوم با کمترین کارمزد' },
+  { id: 'base', name: 'بیس (Base)', symbol: 'BASE', desc: 'لایه دوم پرسرعت رسمی صرافی کوین‌بیس' },
+  { id: 'polygon', name: 'پالیگان (Polygon)', symbol: 'POL', desc: 'اکوسیستم مقیاس‌پذیر و پرسرعت PoS' },
+  { id: 'optimism', name: 'آپتیمیزم (Optimism)', symbol: 'OP', desc: 'معماری پیشرفته سوپرچین (Superchain)' },
+  { id: 'zksync', name: 'زد‌کی‌سینک (zkSync Era)', symbol: 'ZK', desc: 'رول‌آپ با امنیت محاسباتی دانش صفر' },
+  { id: 'linea', name: 'لینیا (Linea)', symbol: 'LINEA', desc: 'شبکه zkEVM شرکت ConsenSys (توسعه‌دهنده متامسک)' },
+  { id: 'blast', name: 'بلاست (Blast)', symbol: 'BLAST', desc: 'لایه دوم دارای سوددهی ذاتی دارایی‌ها' },
+];
+
+const L2_IDS = new Set(ETH_L2_CHAINS.map(c => c.id));
+
+// Standalone primary blockchains
+const STANDALONE_TABS = [
+  { id: 'ethereum', name: 'اتریوم (ETH)', isL2Group: false },
+  { id: 'eth_l2', name: 'لایه‌های ۲ اتریوم', isL2Group: true },
+  { id: 'solana', name: 'سولانا (SOL)', isL2Group: false },
+  { id: 'ton', name: 'تون (TON)', isL2Group: false },
+  { id: 'tron', name: 'ترون (TRX)', isL2Group: false },
+  { id: 'bsc', name: 'بایننس (BNB)', isL2Group: false },
+  { id: 'avalanche', name: 'آوالانچ (AVAX)', isL2Group: false },
+  { id: 'sui', name: 'سویی (SUI)', isL2Group: false },
+  { id: 'aptos', name: 'آپتوس (APT)', isL2Group: false },
 ];
 
 const WALLET_OPTIONS = {
@@ -54,14 +63,14 @@ const WALLET_OPTIONS = {
     { 
       id: 'trustwallet', 
       name: 'Trust Wallet', 
-      desc: 'کیف‌پول چند ارزی بایننس برای موبایل و وب',
+      desc: 'کیف‌پول چند ارزی بایننس برای موبایل و افزونه',
       checkInstalled: () => typeof window !== 'undefined' && Boolean(window.ethereum?.isTrust),
       installUrl: 'https://trustwallet.com/'
     },
     { 
       id: 'injected', 
-      name: 'کیف‌پول مرورگر (Injected)', 
-      desc: 'اتصال به هر افزونه استاندارد اتریوم و EVM',
+      name: 'کیف‌پول مرورگر (Injected Web3)', 
+      desc: 'اتصال خودکار به افزونه پیش‌فرض اتریوم',
       checkInstalled: () => typeof window !== 'undefined' && Boolean(window.ethereum),
       installUrl: null
     }
@@ -70,7 +79,7 @@ const WALLET_OPTIONS = {
     { 
       id: 'phantom', 
       name: 'Phantom', 
-      desc: 'کیف‌پول سریع و امن سولانا و بیت‌کوین', 
+      desc: 'کیف‌پول سریع، امن و استاندارد سولانا', 
       badge: 'پیشنهادی',
       checkInstalled: () => typeof window !== 'undefined' && Boolean(window.phantom?.solana || window.solana?.isPhantom),
       installUrl: 'https://phantom.app/'
@@ -78,7 +87,7 @@ const WALLET_OPTIONS = {
     { 
       id: 'solflare', 
       name: 'Solflare', 
-      desc: 'پشتیبانی تخصصی از اکوسیستم دیفای سولانا',
+      desc: 'پشتیبانی تخصصی از استیکینگ و دیفای سولانا',
       checkInstalled: () => typeof window !== 'undefined' && Boolean(window.solflare),
       installUrl: 'https://solflare.com/'
     }
@@ -158,22 +167,33 @@ export default function WalletModal({ isOpen, onClose }) {
     connectError 
   } = useWallet();
 
-  const [selectedChainTab, setSelectedChainTab] = useState(activeChain);
+  const isInitialL2 = L2_IDS.has(activeChain);
+  const [selectedMainTab, setSelectedMainTab] = useState(isInitialL2 ? 'eth_l2' : activeChain);
+  const [selectedL2Chain, setSelectedL2Chain] = useState(isInitialL2 ? activeChain : 'arbitrum');
+  const [isL2DropdownOpen, setIsL2DropdownOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [localError, setLocalError] = useState(null);
 
-  // Sync selected tab with current activeChain whenever modal opens
+  // Sync state whenever modal opens or activeChain updates
   useEffect(() => {
     if (isOpen) {
-      setSelectedChainTab(activeChain);
+      if (L2_IDS.has(activeChain)) {
+        setSelectedMainTab('eth_l2');
+        setSelectedL2Chain(activeChain);
+      } else {
+        setSelectedMainTab(activeChain);
+      }
       setLocalError(null);
+      setIsL2DropdownOpen(false);
     }
   }, [isOpen, activeChain]);
 
   if (!isOpen) return null;
 
-  const chainConfig = getChainById(selectedChainTab) || getChainById('ethereum');
-  const currentWallet = connectedWallets[selectedChainTab];
+  // The actual chain id for current wallet connection
+  const targetChainId = selectedMainTab === 'eth_l2' ? selectedL2Chain : selectedMainTab;
+  const chainConfig = getChainById(targetChainId) || getChainById('ethereum');
+  const currentWallet = connectedWallets[targetChainId];
 
   // Resolve wallet options depending on chain type
   const chainType = chainConfig?.type || 'evm';
@@ -188,10 +208,9 @@ export default function WalletModal({ isOpen, onClose }) {
   const handleSelectWallet = async (wallet) => {
     setLocalError(null);
     try {
-      await connectWallet(selectedChainTab, wallet.name);
-      // Auto-set as active chain if not already
-      if (activeChain !== selectedChainTab) {
-        await setActiveChain(selectedChainTab);
+      await connectWallet(targetChainId, wallet.name);
+      if (activeChain !== targetChainId) {
+        await setActiveChain(targetChainId);
       }
       onClose();
     } catch (e) {
@@ -200,15 +219,15 @@ export default function WalletModal({ isOpen, onClose }) {
   };
 
   const handleEnableDemo = () => {
-    connectDemoMode(selectedChainTab);
-    if (activeChain !== selectedChainTab) {
-      setActiveChain(selectedChainTab);
+    connectDemoMode(targetChainId);
+    if (activeChain !== targetChainId) {
+      setActiveChain(targetChainId);
     }
     onClose();
   };
 
   const handleDisconnect = () => {
-    disconnectWallet(selectedChainTab);
+    disconnectWallet(targetChainId);
   };
 
   return (
@@ -237,17 +256,18 @@ export default function WalletModal({ isOpen, onClose }) {
           </button>
         </div>
 
-        {/* Chain Selector Quick Pills with Official Icons & Canonical Order */}
+        {/* Primary Blockchains Tabs */}
         <div className="p-2.5 bg-background/60 border-b border-border flex gap-1.5 overflow-x-auto no-scrollbar scroll-smooth">
-          {ORDERED_CHAINS.map(c => {
-            const isTabActive = selectedChainTab === c.id;
+          {STANDALONE_TABS.map(tab => {
+            const isTabActive = selectedMainTab === tab.id;
             return (
               <button
-                key={c.id}
+                key={tab.id}
                 type="button"
                 onClick={() => {
-                  setSelectedChainTab(c.id);
+                  setSelectedMainTab(tab.id);
                   setLocalError(null);
+                  setIsL2DropdownOpen(false);
                 }}
                 className={`shrink-0 flex items-center gap-1.5 py-1.5 px-2.5 rounded-xl text-xs font-bold transition-all ${
                   isTabActive 
@@ -255,12 +275,79 @@ export default function WalletModal({ isOpen, onClose }) {
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted/60 border border-transparent'
                 }`}
               >
-                {getChainIcon(c.id, 16)}
-                <span className="whitespace-nowrap">{c.name}</span>
+                {tab.isL2Group ? (
+                  <div className="flex items-center gap-1">
+                    <Layers size={14} className={isTabActive ? 'text-accent' : 'text-muted-foreground'} />
+                    <span className="whitespace-nowrap">{tab.name}</span>
+                  </div>
+                ) : (
+                  <>
+                    {getChainIcon(tab.id, 16)}
+                    <span className="whitespace-nowrap">{tab.name}</span>
+                  </>
+                )}
               </button>
             );
           })}
         </div>
+
+        {/* Dedicated Ethereum Layer 2 Dropdown Bar (Visible only when L2 group tab is selected) */}
+        {selectedMainTab === 'eth_l2' && (
+          <div className="px-4 py-2.5 bg-muted/40 border-b border-border flex items-center justify-between gap-3 animate-fade-in relative z-20">
+            <div className="flex items-center gap-2">
+              <Layers size={14} className="text-accent" />
+              <span className="text-xs font-bold text-foreground">انتخاب لایه دوم:</span>
+            </div>
+
+            {/* Dropdown Menu */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsL2DropdownOpen(!isL2DropdownOpen)}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-card border border-border hover:border-accent/50 text-xs font-bold text-foreground transition-all shadow-sm"
+              >
+                {getChainIcon(selectedL2Chain, 15)}
+                <span>{getChainById(selectedL2Chain)?.name || selectedL2Chain}</span>
+                <ChevronDown size={14} className={`text-muted-foreground transition-transform duration-200 ${isL2DropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {isL2DropdownOpen && (
+                <div className="absolute left-0 mt-1.5 w-60 bg-card border border-border rounded-xl shadow-2xl p-1.5 z-30 space-y-1 animate-scale-in">
+                  <div className="px-2 py-1 text-[11px] font-bold text-muted-foreground border-b border-border/60 mb-1">
+                    شبکه‌های مقیاس‌پذیری اتریوم (Rollups)
+                  </div>
+                  {ETH_L2_CHAINS.map(l2 => {
+                    const isSelected = selectedL2Chain === l2.id;
+                    return (
+                      <button
+                        key={l2.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedL2Chain(l2.id);
+                          setIsL2DropdownOpen(false);
+                          setLocalError(null);
+                        }}
+                        className={`w-full flex items-center justify-between p-2 rounded-lg text-xs transition-colors text-right ${
+                          isSelected 
+                            ? 'bg-accentSoft text-accent font-bold' 
+                            : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          {getChainIcon(l2.id, 16)}
+                          <div>
+                            <span className="font-bold block">{l2.name}</span>
+                          </div>
+                        </div>
+                        {isSelected && <Check size={14} className="text-accent" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Error notification if any */}
         {(localError || connectError) && (
@@ -318,7 +405,7 @@ export default function WalletModal({ isOpen, onClose }) {
                 <button
                   type="button"
                   onClick={() => {
-                    setActiveChain(selectedChainTab);
+                    setActiveChain(targetChainId);
                     onClose();
                   }}
                   className="flex-1 py-2.5 px-4 rounded-xl bg-accent hover:bg-emerald-600 text-background font-bold text-sm transition-all"
@@ -355,28 +442,35 @@ export default function WalletModal({ isOpen, onClose }) {
                     type="button"
                     disabled={isConnecting}
                     onClick={() => handleSelectWallet(wallet)}
-                    className="w-full flex items-center justify-between p-3.5 rounded-xl bg-muted/40 hover:bg-muted border border-border hover:border-zinc-500 transition-all text-right group"
+                    className="w-full flex items-center justify-between p-3 rounded-xl bg-muted/40 hover:bg-muted border border-border hover:border-zinc-500 transition-all text-right group"
                   >
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-sm text-foreground group-hover:text-accent transition-colors">
-                          {wallet.name}
-                        </span>
-                        {isInstalled && (
-                          <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-accentSoft text-accent border border-accent/20">
-                            نصب شده
-                          </span>
-                        )}
-                        {wallet.badge && !isInstalled && (
-                          <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-muted text-muted-foreground border border-border">
-                            {wallet.badge}
-                          </span>
-                        )}
+                    <div className="flex items-center gap-3">
+                      {/* Authentic Wallet Logo */}
+                      <div className="w-10 h-10 rounded-xl bg-card border border-border/80 flex items-center justify-center shrink-0 shadow-sm group-hover:border-accent/40 transition-colors">
+                        {getWalletIcon(wallet.id, 24)}
                       </div>
-                      <p className="text-xs text-muted-foreground mt-0.5">{wallet.desc}</p>
+
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-sm text-foreground group-hover:text-accent transition-colors">
+                            {wallet.name}
+                          </span>
+                          {isInstalled && (
+                            <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-accentSoft text-accent border border-accent/20">
+                              نصب شده
+                            </span>
+                          )}
+                          {wallet.badge && !isInstalled && (
+                            <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-muted text-muted-foreground border border-border">
+                              {wallet.badge}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-0.5">{wallet.desc}</p>
+                      </div>
                     </div>
 
-                    <span className="text-xs font-bold text-muted-foreground group-hover:text-accent transition-colors">
+                    <span className="text-xs font-bold text-muted-foreground group-hover:text-accent transition-colors shrink-0 mr-2">
                       اتصال ➔
                     </span>
                   </button>

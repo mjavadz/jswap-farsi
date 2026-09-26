@@ -60,25 +60,16 @@ export default function Footer({ onSwitchTab }) {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-4 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground font-mono">
+        <div className="pt-4 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
           <div className="flex items-center gap-2">
-            <span>توسعه برای وب۳ فارسی</span>
+            <span>پروتکل مبادله غیرحضانتی و امن</span>
             <span>•</span>
-            <a 
-              href="https://javadnode.top" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="underline hover:text-foreground"
-            >
-              javadnode.top
-            </a>
+            <span>توسعه‌یافته برای وب۳ فارسی</span>
           </div>
-          <div className="flex items-center gap-3">
-            <span>v1.0.0</span>
-            <span className="flex items-center gap-1">
-              <Heart size={10} className="text-rose-500 fill-rose-500" />
-              <span className="font-sans font-bold">JSWAP</span>
-            </span>
+          <div className="flex items-center gap-1.5">
+            <span className="font-sans font-bold text-foreground">JSWAP</span>
+            <span>—</span>
+            <span>آزادی و حریم خصوصی مالی</span>
           </div>
         </div>
 
