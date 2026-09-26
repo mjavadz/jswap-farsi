@@ -199,3 +199,41 @@ export const BlastIcon = ({ size = 24, className = '' }) => (
     <path d="M11 8h6a4 4 0 013.5 6 4.5 4.5 0 01-3.5 8H11V8zm3 5h3a1.5 1.5 0 000-3h-3v3zm0 6h3.5a1.8 1.8 0 000-3.6H14V19z" fill="#000" />
   </svg>
 );
+
+export const getChainIcon = (chainId, size = 20, className = '') => {
+  switch (chainId) {
+    case 'ethereum':
+      return <EthereumIcon size={size} className={className} />;
+    case 'solana':
+      return <SolanaIcon size={size} className={className} />;
+    case 'ton':
+      return <TonIcon size={size} className={className} />;
+    case 'tron':
+      return <TronIcon size={size} className={className} />;
+    case 'bsc':
+      return <BnbIcon size={size} className={className} />;
+    case 'arbitrum':
+      return <ArbitrumIcon size={size} className={className} />;
+    case 'base':
+      return <BaseIcon size={size} className={className} />;
+    case 'polygon':
+      return <PolygonIcon size={size} className={className} />;
+    case 'avalanche':
+      return <AvalancheIcon size={size} className={className} />;
+    case 'optimism':
+      return <OptimismIcon size={size} className={className} />;
+    case 'zksync':
+      return <ZkSyncIcon size={size} className={className} />;
+    case 'sui':
+      return <SuiIcon size={size} className={className} />;
+    case 'aptos':
+      return <AptosIcon size={size} className={className} />;
+    case 'linea':
+      return <LineaIcon size={size} className={className} />;
+    case 'blast':
+      return <BlastIcon size={size} className={className} />;
+    default:
+      return <EthereumIcon size={size} className={className} />;
+  }
+};
+

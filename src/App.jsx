@@ -12,7 +12,6 @@ import { Clock, ShieldCheck, CreditCard, ArrowDownUp, HelpCircle } from 'lucide-
 import { StarsIcon } from './components/Icons';
 
 // VibeFarsi RTL Components & Backgrounds
-import { ScrollProgress } from '@/components/animations/scroll-progress';
 import { GridBackground } from '@/components/backgrounds/grid';
 import { TextShimmer } from '@/components/animations/text-shimmer';
 import { SpotlightCard } from '@/components/animations/spotlight-card';
@@ -59,9 +58,6 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-accent selection:text-background relative overflow-x-hidden">
       
-      {/* VibeFarsi RTL Scroll Progress */}
-      <ScrollProgress className="h-0.5 bg-accent z-[60]" />
-
       {/* VibeFarsi Technical Grid Background */}
       <GridBackground size={48} className="opacity-20 pointer-events-none" />
 
