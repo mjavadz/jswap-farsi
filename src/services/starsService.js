@@ -1,5 +1,6 @@
-// Telegram Stars OTC Desk Pricing & Service
-import { getTokenPrice } from './priceService';
+// Telegram Stars OTC Desk Service & Pricing Engine
+import { getTokenPrice, getIranTetherRate } from './priceService';
+import { TREASURY_WALLETS } from '../config/treasury';
 
 export const STARS_PACKAGES = [
   { stars: 50, badge: 'شروع', popular: false },
@@ -12,15 +13,42 @@ export const STARS_PACKAGES = [
   { stars: 10000, badge: 'تخفیف ۷٪', popular: false },
 ];
 
-// 1 Star price in USD & Toman
+// Base star price in USD
 export const STAR_BASE_USD = 0.015;
-export const TOMAN_PER_USD = 66000;
 
 export const PAYMENT_METHODS = [
-  { id: 'ton', name: 'شبکه تون (TON)', symbol: 'TON', network: 'TON Network', icon: 'ton', address: 'EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N' },
-  { id: 'usdt_trc20', name: 'تتر ترون (USDT TRC-20)', symbol: 'USDT', network: 'TRON TRC-20', icon: 'usdt', address: 'TMuA6YqfCeX8EhbfYg5y7SNNGLqxUX8e89' },
-  { id: 'sol', name: 'سولانا (SOL)', symbol: 'SOL', network: 'Solana Network', icon: 'sol', address: '7XwP6fC9dGkPZ91e2K5yBqJ8fG9m82La9Dk4eM5b6P81' },
-  { id: 'trx', name: 'ترون (TRX)', symbol: 'TRX', network: 'TRON Mainnet', icon: 'trx', address: 'TMuA6YqfCeX8EhbfYg5y7SNNGLqxUX8e89' },
+  { 
+    id: 'ton', 
+    name: 'شبکه تون (TON)', 
+    symbol: 'TON', 
+    network: 'TON Mainnet', 
+    icon: 'ton', 
+    address: TREASURY_WALLETS.ton.address 
+  },
+  { 
+    id: 'usdt_trc20', 
+    name: 'تتر ترون (USDT TRC-20)', 
+    symbol: 'USDT', 
+    network: 'TRON TRC-20', 
+    icon: 'usdt', 
+    address: TREASURY_WALLETS.tron.address 
+  },
+  { 
+    id: 'sol', 
+    name: 'سولانا (SOL)', 
+    symbol: 'SOL', 
+    network: 'Solana Mainnet', 
+    icon: 'sol', 
+    address: TREASURY_WALLETS.solana.address 
+  },
+  { 
+    id: 'trx', 
+    name: 'ترون (TRX)', 
+    symbol: 'TRX', 
+    network: 'TRON Mainnet', 
+    icon: 'trx', 
+    address: TREASURY_WALLETS.tron.address 
+  },
 ];
 
 export function calculateStarsPrice(starsCount, methodId = 'ton') {
@@ -33,13 +61,16 @@ export function calculateStarsPrice(starsCount, methodId = 'ton') {
   else if (count >= 2500) discount = 0.03;
 
   const totalUSD = count * STAR_BASE_USD * (1 - discount);
-  const totalToman = Math.round(totalUSD * TOMAN_PER_USD);
+
+  // Dynamic live rate from top 5 Iranian exchanges average
+  const currentTomanRate = getIranTetherRate() || 234000;
+  const totalToman = Math.round(totalUSD * currentTomanRate);
 
   // Crypto conversion using live market prices
   let cryptoAmount = 0;
-  const tonPrice = getTokenPrice('ton') || 1.60;
-  const solPrice = getTokenPrice('sol') || 117.10;
-  const trxPrice = getTokenPrice('trx') || 0.34;
+  const tonPrice = getTokenPrice('TON') || 1.60;
+  const solPrice = getTokenPrice('SOL') || 117.10;
+  const trxPrice = getTokenPrice('TRX') || 0.34;
 
   if (methodId === 'ton') {
     cryptoAmount = Number((totalUSD / tonPrice).toFixed(3));
@@ -56,6 +87,7 @@ export function calculateStarsPrice(starsCount, methodId = 'ton') {
     totalUSD: totalUSD.toFixed(2),
     totalToman,
     cryptoAmount,
+    tomanRate: currentTomanRate,
     unitPriceToman: Math.round(totalToman / count),
     discountPercent: Math.round(discount * 100)
   };
@@ -75,7 +107,7 @@ export function createStarsOrder({ type = 'buy', stars, username, methodId, payo
     pricing,
     depositAddress: method.address,
     payoutAddress: payoutAddress || null,
-    status: 'pending_payment', // 'pending_payment' | 'paid' | 'processing' | 'completed' | 'cancelled'
+    status: 'pending_payment',
     createdAt: Date.now(),
     expiresAt: Date.now() + 20 * 60 * 1000, // 20 minutes
     txHash: null
@@ -102,7 +134,7 @@ export function saveOrderToHistory(order) {
     const updated = [order, ...list.filter(o => o.id !== order.id)].slice(0, 50);
     localStorage.setItem(STORAGE_ORDERS_KEY, JSON.stringify(updated));
   } catch (e) {
-    console.error('Error saving order', e);
+    console.error('Error saving order to localStorage:', e);
   }
 }
 
@@ -118,7 +150,7 @@ export function updateOrderStatus(orderId, status, txHash = null) {
       return list[idx];
     }
   } catch (e) {
-    console.error('Error updating order', e);
+    console.error('Error updating order status:', e);
   }
   return null;
 }

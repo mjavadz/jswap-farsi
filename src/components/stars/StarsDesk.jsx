@@ -1,30 +1,25 @@
 import React, { useState } from 'react';
 import { 
-  StarsIcon, 
+  Send, 
+  AtSign,
+  HelpCircle
+} from 'lucide-react';
+import { 
   TonIcon, 
   SolanaIcon, 
   TronIcon, 
-  UsdtIcon 
+  UsdtIcon, 
+  StarsIcon 
 } from '../Icons';
-import { 
-  Sparkles, 
-  Send, 
-  Check, 
-  ArrowLeftRight, 
-  HelpCircle, 
-  Clock, 
-  ShieldCheck, 
-  AtSign, 
-  Wallet 
-} from 'lucide-react';
-import StarsInvoiceModal from './StarsInvoiceModal';
 import { 
   STARS_PACKAGES, 
   PAYMENT_METHODS, 
   calculateStarsPrice, 
   createStarsOrder 
 } from '../../services/starsService';
-import { toPersianDigits, formatToman, formatUSD } from '../../utils/format';
+import { toPersianDigits, formatToman } from '../../utils/format';
+import { getIranTetherRate } from '../../services/priceService';
+import StarsInvoiceModal from './StarsInvoiceModal';
 
 export default function StarsDesk({ onOrderCreated }) {
   const [mode, setMode] = useState('buy'); // 'buy' | 'sell'
@@ -46,9 +41,10 @@ export default function StarsDesk({ onOrderCreated }) {
   const pricing = calculateStarsPrice(currentStarsCount, selectedMethod);
 
   // Sell pricing calculation (buying back at 92% rate)
-  const sellPricing = calculateStarsPrice(Number(sellStarsAmount) || 100, sellPayoutMethod);
-  const sellPayoutUSD = (Number(sellPricing.totalUSD) * 0.92).toFixed(2);
-  const sellPayoutToman = Math.round(sellPricing.totalToman * 0.92);
+  const sellRateToman = getIranTetherRate() || 234000;
+  const sellCount = Number(sellStarsAmount) || 0;
+  const sellPayoutUSD = (sellCount * 0.013).toFixed(2);
+  const sellPayoutToman = Math.round(Number(sellPayoutUSD) * sellRateToman);
 
   const handlePackageClick = (stars) => {
     setSelectedStars(stars);
@@ -129,32 +125,32 @@ export default function StarsDesk({ onOrderCreated }) {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-6">
+    <div className="w-full max-w-2xl mx-auto space-y-4">
       
       {/* Top Desk Card */}
-      <div className="glass-card rounded-3xl p-5 sm:p-8 shadow-2xl relative">
+      <div className="card p-5 sm:p-6 shadow-sm">
         
         {/* Header Title & Switch */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-dark-border/60">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-accent-gold/20 border border-accent-gold/40 flex items-center justify-center text-accent-gold shadow-glow-gold">
-              <StarsIcon size={24} />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-border">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-400">
+              <StarsIcon size={20} />
             </div>
             <div>
-              <h2 className="text-lg font-black text-white">میز مستقیم استارز تلگرام (Telegram Stars)</h2>
-              <p className="text-xs text-slate-400">خرید و فروش آنی با تتر، تون، سولانا و ترون بدون کارت بانکی</p>
+              <h2 className="text-base font-bold text-fg">میز معامله مستقیم استارز تلگرام</h2>
+              <p className="text-xs text-fgMuted">خرید و فروش بی‌واسطه با تتر، تون، سولانا و ترون</p>
             </div>
           </div>
 
           {/* Mode Switch (Buy / Sell) */}
-          <div className="p-1 bg-dark-bg border border-dark-border rounded-xl flex items-center shrink-0">
+          <div className="p-1 bg-muted/60 border border-border rounded-lg flex items-center shrink-0 self-start sm:self-auto">
             <button
               type="button"
               onClick={() => { setMode('buy'); setValidationError(''); }}
-              className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
                 mode === 'buy'
-                  ? 'bg-accent-gold text-dark-bg font-extrabold shadow-sm'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-card text-amber-400 shadow-sm border border-border'
+                  : 'text-fgSubtle hover:text-fg'
               }`}
             >
               خرید استارز
@@ -162,21 +158,21 @@ export default function StarsDesk({ onOrderCreated }) {
             <button
               type="button"
               onClick={() => { setMode('sell'); setValidationError(''); }}
-              className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
                 mode === 'sell'
-                  ? 'bg-emerald-500 text-dark-bg font-extrabold shadow-sm'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-card text-accent shadow-sm border border-border'
+                  : 'text-fgSubtle hover:text-fg'
               }`}
             >
-              فروش به پلتفرم
+              فروش استارز
             </button>
           </div>
         </div>
 
         {/* Validation Error Banner */}
         {validationError && (
-          <div className="mt-4 p-3 rounded-lg bg-destructiveSoft border border-destructive/30 text-destructive text-xs font-semibold flex items-center gap-2 animate-fade-in">
-            <HelpCircle size={16} />
+          <div className="mt-3 p-3 rounded-lg bg-destructiveSoft border border-destructive/30 text-red-300 text-xs font-medium flex items-center gap-2 animate-fade-in">
+            <HelpCircle size={15} className="text-destructive shrink-0" />
             <span>{validationError}</span>
           </div>
         )}
@@ -185,13 +181,13 @@ export default function StarsDesk({ onOrderCreated }) {
             MODE 1: BUY STARS
            ========================================================= */}
         {mode === 'buy' && (
-          <form onSubmit={handleCreateBuyOrder} className="mt-6 space-y-6">
+          <form onSubmit={handleCreateBuyOrder} className="mt-5 space-y-4">
             
             {/* Step 1: Telegram Username */}
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-300 flex items-center justify-between">
-                <span>۱. نام کاربری تلگرام (اکانت شخصی یا ربات/کانال دریافت‌کننده):</span>
-                <span className="text-[11px] text-slate-500 font-normal">نیازی به عضویت نیست</span>
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-fg flex items-center justify-between">
+                <span>۱. نام کاربری تلگرام (اکانت یا ربات دریافت‌کننده):</span>
+                <span className="text-[11px] text-fgSubtle font-normal">نیازی به پسورد نیست</span>
               </label>
               <div className="relative">
                 <input
@@ -200,25 +196,25 @@ export default function StarsDesk({ onOrderCreated }) {
                   placeholder="مثال: javad_crypto یا @mybot"
                   value={telegramUsername}
                   onChange={(e) => setTelegramUsername(e.target.value)}
-                  className="w-full pl-4 pr-11 py-3.5 rounded-2xl bg-dark-surface border border-dark-border text-sm text-white placeholder-slate-500 focus:outline-none focus:border-accent-gold font-mono"
+                  className="input pr-9 py-2.5 font-mono text-sm"
                   dir="ltr"
                 />
-                <AtSign size={18} className="absolute right-4 top-4 text-slate-400" />
+                <AtSign size={16} className="absolute right-3 top-3 text-fgSubtle" />
               </div>
             </div>
 
             {/* Step 2: Select Package */}
-            <div className="space-y-2.5">
+            <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-slate-300">
+                <label className="text-xs font-semibold text-fg">
                   ۲. انتخاب پکیج استارز:
                 </label>
-                <span className="text-[11px] text-accent-gold font-bold">
-                  نرخ هر استارز ≈ {formatToman(pricing.unitPriceToman)}
+                <span className="text-[11px] text-amber-400 font-semibold font-mono">
+                  هر استارز ≈ {formatToman(pricing.unitPriceToman)}
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {STARS_PACKAGES.map((pkg) => {
                   const isSelected = !customStars && selectedStars === pkg.stars;
                   return (
@@ -226,24 +222,24 @@ export default function StarsDesk({ onOrderCreated }) {
                       key={pkg.stars}
                       type="button"
                       onClick={() => handlePackageClick(pkg.stars)}
-                      className={`p-3 rounded-2xl border text-right transition-all relative overflow-hidden group ${
+                      className={`p-2.5 rounded-xl border text-right transition-all group ${
                         isSelected 
-                          ? 'bg-accent-gold/15 border-accent-gold shadow-glow-gold' 
-                          : 'bg-dark-surface/70 border-dark-border hover:border-slate-500'
+                          ? 'bg-amber-500/10 border-amber-500/50 text-fg' 
+                          : 'bg-muted/30 border-border hover:border-zinc-500'
                       }`}
                     >
                       {pkg.badge && (
                         <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold block w-fit mb-1 ${
-                          pkg.popular ? 'bg-amber-500 text-black' : 'bg-slate-800 text-slate-300'
+                          pkg.popular ? 'bg-amber-400 text-bg' : 'bg-muted text-fgMuted'
                         }`}>
                           {pkg.badge}
                         </span>
                       )}
-                      <div className="flex items-center gap-1.5 font-black text-base text-white group-hover:text-accent-gold transition-colors">
-                        <StarsIcon size={16} />
+                      <div className="flex items-center gap-1.5 font-bold text-sm text-fg group-hover:text-amber-400 transition-colors">
+                        <StarsIcon size={14} />
                         <span>{toPersianDigits(pkg.stars)}</span>
                       </div>
-                      <span className="text-[11px] text-slate-400 block mt-1">
+                      <span className="text-[10px] text-fgSubtle block mt-0.5 font-mono">
                         {formatToman(calculateStarsPrice(pkg.stars, selectedMethod).totalToman)}
                       </span>
                     </button>
@@ -252,13 +248,13 @@ export default function StarsDesk({ onOrderCreated }) {
               </div>
 
               {/* Custom Stars Input */}
-              <div className="pt-2">
+              <div className="pt-1">
                 <input
                   type="text"
-                  placeholder="یا تعداد دلخواه استارز را وارد فرمایید (حداقل ۵۰)..."
+                  placeholder="یا تعداد دلخواه استارز را وارد نمایید (حداقل ۵۰)..."
                   value={customStars}
                   onChange={(e) => handleCustomChange(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-dark-surface/50 border border-dark-border text-xs text-white placeholder-slate-500 focus:outline-none focus:border-accent-gold font-mono"
+                  className="input py-2 text-xs font-mono"
                   dir="ltr"
                 />
               </div>
@@ -266,7 +262,7 @@ export default function StarsDesk({ onOrderCreated }) {
 
             {/* Step 3: Payment Method */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-300">
+              <label className="text-xs font-semibold text-fg">
                 ۳. ارز پرداختی جهت تسویه:
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -277,16 +273,16 @@ export default function StarsDesk({ onOrderCreated }) {
                       key={m.id}
                       type="button"
                       onClick={() => setSelectedMethod(m.id)}
-                      className={`flex items-center gap-2.5 p-3 rounded-xl border text-right transition-all ${
+                      className={`flex items-center gap-2 p-2.5 rounded-xl border text-right transition-all ${
                         isSelected 
-                          ? 'bg-accent-emerald/15 border-accent-emerald text-white' 
-                          : 'bg-dark-surface border-dark-border text-slate-400 hover:text-white'
+                          ? 'bg-accentSoft border-accent/40 text-fg' 
+                          : 'bg-muted/30 border-border text-fgMuted hover:text-fg'
                       }`}
                     >
                       {renderMethodIcon(m.id)}
                       <div>
-                        <strong className="text-xs block text-white">{m.symbol}</strong>
-                        <span className="text-[10px] text-slate-400">{m.network.split(' ')[0]}</span>
+                        <strong className="text-xs block text-fg">{m.symbol}</strong>
+                        <span className="text-[10px] text-fgSubtle">{m.network.split(' ')[0]}</span>
                       </div>
                     </button>
                   );
@@ -295,18 +291,18 @@ export default function StarsDesk({ onOrderCreated }) {
             </div>
 
             {/* Price Summary Breakdown */}
-            <div className="p-4 rounded-2xl bg-dark-bg/80 border border-dark-border/80 space-y-2 text-xs">
-              <div className="flex justify-between items-center text-slate-400">
+            <div className="p-3.5 rounded-xl bg-muted/40 border border-border space-y-2 text-xs">
+              <div className="flex justify-between items-center text-fgMuted">
                 <span>تعداد استارز انتخابی:</span>
-                <strong className="text-white font-mono">{toPersianDigits(currentStarsCount)} Stars</strong>
+                <strong className="text-fg font-mono">{toPersianDigits(currentStarsCount)} Stars</strong>
               </div>
-              <div className="flex justify-between items-center text-slate-400">
+              <div className="flex justify-between items-center text-fgMuted">
                 <span>مبلغ کل به تومان:</span>
-                <strong className="text-accent-gold font-bold text-sm">{formatToman(pricing.totalToman)}</strong>
+                <strong className="text-amber-400 font-bold text-sm font-mono">{formatToman(pricing.totalToman)}</strong>
               </div>
-              <div className="flex justify-between items-center text-slate-400 pt-1 border-t border-dark-border/40">
+              <div className="flex justify-between items-center text-fgMuted pt-1.5 border-t border-border/60">
                 <span>مبلغ نهایی قابل واریز کریپتو:</span>
-                <strong className="text-emerald-400 font-mono text-base" dir="ltr">
+                <strong className="text-accent font-mono text-sm" dir="ltr">
                   {pricing.cryptoAmount} {PAYMENT_METHODS.find(m => m.id === selectedMethod)?.symbol}
                 </strong>
               </div>
@@ -315,10 +311,10 @@ export default function StarsDesk({ onOrderCreated }) {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-accent-gold via-amber-500 to-yellow-600 hover:opacity-95 text-dark-bg font-black text-base transition-all shadow-glow-gold active:scale-95 flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-xl btn-primary text-sm flex items-center justify-center gap-2 shadow-sm"
             >
-              <span>ثبت سفارش و صدور پیش‌فاکتور آنی</span>
-              <Send size={18} />
+              <span>ثبت سفارش و صدور پیش‌فاکتور</span>
+              <Send size={15} />
             </button>
           </form>
         )}
@@ -327,95 +323,93 @@ export default function StarsDesk({ onOrderCreated }) {
             MODE 2: SELL STARS
            ========================================================= */}
         {mode === 'sell' && (
-          <form onSubmit={handleCreateSellOrder} className="mt-6 space-y-6 animate-fadeIn">
-            <div className="p-3.5 rounded-xl bg-sky-500/10 border border-sky-500/30 text-sky-300 text-xs leading-relaxed">
-              💡 <strong>راهنمای نقد کردن استارز:</strong> استارزهای دریافتی از کانال یا بات خود را با بالاترین نرخ نقد کنید. معادل کریپتو به کیف‌پول شما واریز می‌گردد.
+          <form onSubmit={handleCreateSellOrder} className="mt-5 space-y-4 animate-fade-in">
+            <div className="p-3 rounded-lg bg-muted/50 border border-border text-xs text-fgMuted leading-relaxed">
+              💡 استارزهای دریافتی از چنل یا ربات خود را با نرخ لحظه‌ای بازار نقد کنید. معادل کریپتو به کیف‌پول شما واریز می‌گردد.
             </div>
 
             {/* Stars to Sell */}
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-300">
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-fg">
                 تعداد استارز جهت فروش (حداقل ۱۰۰ عدد):
               </label>
-              <div className="relative">
-                <input
-                  type="number"
-                  min="100"
-                  required
-                  placeholder="مثال: 1000"
-                  value={sellStarsAmount}
-                  onChange={(e) => setSellStarsAmount(e.target.value)}
-                  className="w-full px-4 py-3.5 rounded-2xl bg-dark-surface border border-dark-border text-base text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-mono"
-                  dir="ltr"
-                />
-              </div>
+              <input
+                type="number"
+                min="100"
+                required
+                placeholder="مثال: 1000"
+                value={sellStarsAmount}
+                onChange={(e) => setSellStarsAmount(e.target.value)}
+                className="input py-2.5 font-mono text-sm"
+                dir="ltr"
+              />
             </div>
 
             {/* Payout Currency */}
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-300">
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-fg">
                 ارز دریافتی شما:
               </label>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => setSellPayoutMethod('ton')}
-                  className={`flex items-center gap-2 p-3 rounded-xl border text-right transition-all ${
+                  className={`flex items-center gap-2 p-2.5 rounded-xl border text-right transition-all ${
                     sellPayoutMethod === 'ton' 
-                      ? 'bg-[#0088CC]/20 border-[#0088CC] text-white' 
-                      : 'bg-dark-surface border-dark-border text-slate-400'
+                      ? 'bg-[#0088CC]/15 border-[#0088CC]/50 text-fg' 
+                      : 'bg-muted/30 border-border text-fgMuted'
                   }`}
                 >
-                  <TonIcon size={20} />
+                  <TonIcon size={18} />
                   <div>
-                    <strong className="text-xs block text-white">Toncoin (TON)</strong>
-                    <span className="text-[10px] text-slate-400">شبکه TON</span>
+                    <strong className="text-xs block text-fg">Toncoin (TON)</strong>
+                    <span className="text-[10px] text-fgSubtle">شبکه TON</span>
                   </div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setSellPayoutMethod('usdt_trc20')}
-                  className={`flex items-center gap-2 p-3 rounded-xl border text-right transition-all ${
+                  className={`flex items-center gap-2 p-2.5 rounded-xl border text-right transition-all ${
                     sellPayoutMethod === 'usdt_trc20' 
-                      ? 'bg-emerald-500/20 border-emerald-500 text-white' 
-                      : 'bg-dark-surface border-dark-border text-slate-400'
+                      ? 'bg-accentSoft border-accent/40 text-fg' 
+                      : 'bg-muted/30 border-border text-fgMuted'
                   }`}
                 >
-                  <UsdtIcon size={20} />
+                  <UsdtIcon size={18} />
                   <div>
-                    <strong className="text-xs block text-white">Tether (USDT TRC-20)</strong>
-                    <span className="text-[10px] text-slate-400">شبکه ترون</span>
+                    <strong className="text-xs block text-fg">Tether (USDT TRC-20)</strong>
+                    <span className="text-[10px] text-fgSubtle">شبکه ترون</span>
                   </div>
                 </button>
               </div>
             </div>
 
             {/* Payout Destination Address */}
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-300">
-                آدرس ولت شما جهت واریز ارز دریافتی:
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-fg">
+                آدرس کیف‌پول شما جهت واریز وجه:
               </label>
               <input
                 type="text"
                 required
-                placeholder="آدرس کیف‌پول مقصد را وارد فرمایید..."
+                placeholder="آدرس کیف‌پول مقصد خود را وارد نمایید..."
                 value={sellPayoutAddress}
                 onChange={(e) => setSellPayoutAddress(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-dark-surface border border-dark-border text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-mono"
+                className="input py-2.5 font-mono text-xs"
                 dir="ltr"
               />
             </div>
 
             {/* Sell Summary */}
-            <div className="p-4 rounded-2xl bg-dark-bg/80 border border-dark-border/80 space-y-2 text-xs">
-              <div className="flex justify-between items-center text-slate-400">
+            <div className="p-3.5 rounded-xl bg-muted/40 border border-border space-y-2 text-xs">
+              <div className="flex justify-between items-center text-fgMuted">
                 <span>مبلغ دریافتی شما به تومان:</span>
-                <strong className="text-white font-bold text-sm">{formatToman(sellPayoutToman)}</strong>
+                <strong className="text-fg font-bold font-mono">{formatToman(sellPayoutToman)}</strong>
               </div>
-              <div className="flex justify-between items-center text-slate-400 pt-1 border-t border-dark-border/40">
+              <div className="flex justify-between items-center text-fgMuted pt-1.5 border-t border-border/60">
                 <span>معادل ارز واریزی به ولت شما:</span>
-                <strong className="text-emerald-400 font-mono text-base" dir="ltr">
+                <strong className="text-accent font-mono text-sm" dir="ltr">
                   ≈ {sellPayoutUSD} USD
                 </strong>
               </div>
@@ -423,7 +417,7 @@ export default function StarsDesk({ onOrderCreated }) {
 
             <button
               type="submit"
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:opacity-95 text-dark-bg font-black text-base transition-all shadow-glow-emerald active:scale-95"
+              className="w-full py-3 rounded-xl btn-primary text-sm flex items-center justify-center gap-2"
             >
               ثبت درخواست فروش استارز
             </button>

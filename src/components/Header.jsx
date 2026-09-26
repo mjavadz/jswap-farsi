@@ -19,6 +19,7 @@ export default function Header({
   setActiveTab, 
   activeChain, 
   walletAddress, 
+  isDemo,
   onOpenWalletModal,
   onOpenChainSelector
 }) {
@@ -164,8 +165,9 @@ export default function Header({
           >
             {walletAddress ? (
               <>
-                <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" aria-hidden="true" />
-                <span className="font-mono">{shortenAddress(walletAddress)}</span>
+                <span className={`w-1.5 h-1.5 rounded-full ${isDemo ? 'bg-amber-400' : 'bg-accent'} animate-pulse`} aria-hidden="true" />
+                <span className="font-mono" dir="ltr">{shortenAddress(walletAddress)}</span>
+                {isDemo && <span className="text-[10px] text-amber-400 font-normal">(دمو)</span>}
               </>
             ) : (
               <>

@@ -19,11 +19,11 @@ let CACHED_PRICES = {
 
 let IRAN_TETHER_RATE = 234000; // Baseline average Toman
 let IRAN_EXCHANGES_BREAKDOWN = [
-  { name: 'نوبیتکس (Nobitex)', price: 233939 },
-  { name: 'والکس (Wallex)', price: 233845 },
-  { name: 'بیت‌پین (Bitpin)', price: 234360 },
-  { name: 'رمزینکس (Ramzinex)', price: 234060 },
-  { name: 'اوام‌پی فینکس (OMPfinex)', price: 234030 }
+  { name: 'نوبیتکس (Nobitex)', price: 233939, status: 'verified' },
+  { name: 'والکس (Wallex)', price: 233845, status: 'verified' },
+  { name: 'بیت‌پین (Bitpin)', price: 234360, status: 'verified' },
+  { name: 'رمزینکس (Ramzinex)', price: 234060, status: 'verified' },
+  { name: 'اوام‌پی فینکس (OMPfinex)', price: 234030, status: 'verified' }
 ];
 
 let lastFetchTime = 0;
@@ -35,7 +35,7 @@ export async function fetchLivePrices() {
     return { prices: CACHED_PRICES, iranTether: IRAN_TETHER_RATE };
   }
 
-  // 1. First attempt: Query Cloudflare Edge Function (/api/prices)
+  // 1. Primary path: Query Cloudflare Edge Function (/api/prices)
   try {
     const cfResp = await fetch('/api/prices');
     if (cfResp.ok) {
@@ -52,29 +52,29 @@ export async function fetchLivePrices() {
       lastFetchTime = now;
       return { prices: CACHED_PRICES, iranTether: IRAN_TETHER_RATE };
     }
-  } catch (e) {
-    // Cloudflare function unreachable, try client-side direct
+  } catch {
+    // Cloudflare edge function unreachable, fall through to client direct query
   }
 
-  // 2. Direct client fallback to top Iranian exchanges with open CORS (Wallex & Bitpin)
+  // 2. Client fallback direct query to exchanges with open CORS headers
   try {
     const [wallexRes, bitpinRes, binanceRes] = await Promise.allSettled([
-      fetch('https://api.wallex.ir/v1/markets').then(r => r.json()),
-      fetch('https://api.bitpin.ir/v1/mkt/markets/').then(r => r.json()),
-      fetch('https://api.binance.com/api/v3/ticker/price?symbols=%5B%22TONUSDT%22,%22SOLUSDT%22,%22ETHUSDT%22,%22TRXUSDT%22,%22BNBUSDT%22%5D').then(r => r.json())
+      fetch('https://api.wallex.ir/v1/markets', { signal: AbortSignal.timeout(3500) }).then(r => r.json()),
+      fetch('https://api.bitpin.ir/v1/mkt/markets/', { signal: AbortSignal.timeout(3500) }).then(r => r.json()),
+      fetch('https://api.binance.com/api/v3/ticker/price?symbols=%5B%22TONUSDT%22,%22SOLUSDT%22,%22ETHUSDT%22,%22TRXUSDT%22,%22BNBUSDT%22%5D', { signal: AbortSignal.timeout(3500) }).then(r => r.json())
     ]);
 
-    const directRates = [];
+    const activeSources = [];
 
     if (wallexRes.status === 'fulfilled') {
       const p = Number(wallexRes.value?.result?.symbols?.USDTTMN?.stats?.lastPrice);
-      if (p > 50000 && p < 500000) directRates.push({ name: 'والکس (Wallex)', price: Math.round(p) });
+      if (p > 50000 && p < 500000) activeSources.push({ name: 'والکس (Wallex)', price: Math.round(p), status: 'live' });
     }
 
     if (bitpinRes.status === 'fulfilled') {
       const item = bitpinRes.value?.results?.find(m => m.code === 'USDT_IRT');
       const p = Number(item?.price);
-      if (p > 50000 && p < 500000) directRates.push({ name: 'بیت‌پین (Bitpin)', price: Math.round(p) });
+      if (p > 50000 && p < 500000) activeSources.push({ name: 'بیت‌پین (Bitpin)', price: Math.round(p), status: 'live' });
     }
 
     if (binanceRes.status === 'fulfilled' && Array.isArray(binanceRes.value)) {
@@ -90,16 +90,10 @@ export async function fetchLivePrices() {
       });
     }
 
-    if (directRates.length > 0) {
-      const avg = Math.round(directRates.reduce((a, b) => a + b.price, 0) / directRates.length);
+    if (activeSources.length > 0) {
+      const avg = Math.round(activeSources.reduce((a, b) => a + b.price, 0) / activeSources.length);
       IRAN_TETHER_RATE = avg;
-      // Merge with default 5-exchange breakdown
-      IRAN_EXCHANGES_BREAKDOWN = [
-        ...directRates,
-        { name: 'نوبیتکس (Nobitex)', price: avg - 100 },
-        { name: 'رمزینکس (Ramzinex)', price: avg + 50 },
-        { name: 'اوام‌پی فینکس (OMPfinex)', price: avg - 20 }
-      ].slice(0, 5);
+      IRAN_EXCHANGES_BREAKDOWN = activeSources;
     }
 
     lastFetchTime = now;

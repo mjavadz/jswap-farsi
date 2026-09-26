@@ -24,10 +24,12 @@ import { getSwapQuote, executeSwap } from '../../services/swapService';
 import { useWallet } from '../../context/WalletContext';
 import { formatToman } from '../../utils/format';
 
-export default function SwapCard({ onOpenWalletModal }) {
+export default function SwapCard({ onOpenWalletModal, onOpenChainSelector }) {
   const { 
     activeChain, 
+    activeChainConfig,
     isConnected, 
+    isDemo,
     walletAddress, 
     getTokenBalance,
     refetchBalances 
@@ -104,7 +106,8 @@ export default function SwapCard({ onOpenWalletModal }) {
         fromToken,
         toToken,
         quote,
-        userAddress: walletAddress
+        userAddress: walletAddress,
+        isDemo
       });
       setSwapResult(res);
       if (refetchBalances) refetchBalances();
@@ -153,9 +156,22 @@ export default function SwapCard({ onOpenWalletModal }) {
         
         {/* Card Header */}
         <div className="flex items-center justify-between pb-3 mb-3 border-b border-border">
-          <div>
+          <div className="flex items-center gap-2">
             <h2 className="text-sm font-semibold text-fg">سواپ ارز دیجیتال</h2>
-            <span className="text-xs text-fgSubtle">{activeChain.toUpperCase()}</span>
+            <button
+              type="button"
+              onClick={onOpenChainSelector}
+              className="px-2 py-0.5 rounded-full bg-muted border border-border text-xs text-accent font-semibold hover:border-accent/40 flex items-center gap-1 transition-colors"
+              title="تغییر شبکه"
+            >
+              <span>{activeChainConfig?.name || activeChain.toUpperCase()}</span>
+              <ChevronDown size={12} />
+            </button>
+            {isDemo && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold">
+                آزمایشی
+              </span>
+            )}
           </div>
 
           <button
@@ -380,8 +396,14 @@ export default function SwapCard({ onOpenWalletModal }) {
             </div>
 
             <div>
-              <h3 className="text-sm font-bold text-fg">تراکنش انجام شد</h3>
-              <p className="text-xs text-fgSubtle mt-0.5">دارایی به کیف‌پول شما واریز گردید.</p>
+              <h3 className="text-sm font-bold text-fg">
+                {swapResult.isSimulation ? 'مسیر سواپ تأیید شد' : 'تراکنش روی بلاکچین ثبت شد'}
+              </h3>
+              <p className="text-xs text-fgSubtle mt-0.5">
+                {swapResult.isSimulation 
+                  ? 'نرخ و مسیر بهینه مسیریابی گردید.' 
+                  : 'دارایی با موفقیت به آدرس کیف‌پول شما منتقل گردید.'}
+              </p>
             </div>
 
             <div className="p-3 bg-muted rounded-lg border border-border text-xs space-y-1 text-right font-mono" dir="ltr">
@@ -390,7 +412,7 @@ export default function SwapCard({ onOpenWalletModal }) {
                 <span className="text-fg font-bold">{swapResult.fromAmount} {swapResult.fromToken} → {swapResult.toAmount} {swapResult.toToken}</span>
               </div>
               <div className="text-fgSubtle flex justify-between">
-                <span className="font-sans">هش:</span>
+                <span className="font-sans">{swapResult.isSimulation ? 'شناسه:' : 'هش:'}</span>
                 <span className="text-accent truncate max-w-[160px]">{swapResult.txHash}</span>
               </div>
             </div>

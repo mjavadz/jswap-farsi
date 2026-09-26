@@ -1,5 +1,22 @@
 // Cloudflare Pages Function: /api/prices
-// Live Crypto & Iranian Tether Rate (Average of Top 5 Iranian Exchanges by volume)
+// Live Crypto & Iranian Tether Rate (Trimmed Average of Top 5 Iranian Exchanges)
+
+const SECURITY_HEADERS = {
+  'Content-Type': 'application/json; charset=utf-8',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'Referrer-Policy': 'strict-origin-when-cross-origin'
+};
+
+export async function onRequestOptions() {
+  return new Response(null, {
+    status: 204,
+    headers: SECURITY_HEADERS
+  });
+}
 
 export async function onRequestGet(context) {
   // 1. Fetch Global Crypto Prices (Binance public ticker)
@@ -40,13 +57,14 @@ export async function onRequestGet(context) {
   const iranPromise = Promise.allSettled(
     iranExchanges.map(async (ex) => {
       const resp = await fetch(ex.url, {
-        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
+        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; JSwapBot/1.0)' },
         cf: { cacheTtl: 30, cacheEverything: true },
         signal: AbortSignal.timeout(3500)
       });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       const data = await resp.json();
       const price = ex.parse(data);
-      if (price && price > 50000 && price < 500000) {
+      if (typeof price === 'number' && Number.isFinite(price) && price > 40000 && price < 500000) {
         return { name: ex.name, price: Math.round(price) };
       }
       throw new Error('Invalid rate');
@@ -56,7 +74,6 @@ export async function onRequestGet(context) {
   try {
     const [cryptoData, iranResults] = await Promise.all([cryptoPromise, iranPromise]);
 
-    // Parse crypto prices
     const prices = {
       ton: 1.60,
       solana: 117.10,
@@ -69,16 +86,18 @@ export async function onRequestGet(context) {
 
     if (Array.isArray(cryptoData)) {
       cryptoData.forEach(item => {
-        if (item.symbol === 'TONUSDT') prices.ton = Number(item.price);
-        if (item.symbol === 'SOLUSDT') prices.solana = Number(item.price);
-        if (item.symbol === 'ETHUSDT') prices.ethereum = Number(item.price);
-        if (item.symbol === 'TRXUSDT') prices.tron = Number(item.price);
-        if (item.symbol === 'BNBUSDT') prices.bnb = Number(item.price);
-        if (item.symbol === 'BTCUSDT') prices.btc = Number(item.price);
+        const val = Number(item?.price);
+        if (Number.isFinite(val) && val > 0) {
+          if (item.symbol === 'TONUSDT') prices.ton = val;
+          if (item.symbol === 'SOLUSDT') prices.solana = val;
+          if (item.symbol === 'ETHUSDT') prices.ethereum = val;
+          if (item.symbol === 'TRXUSDT') prices.tron = val;
+          if (item.symbol === 'BNBUSDT') prices.bnb = val;
+          if (item.symbol === 'BTCUSDT') prices.btc = val;
+        }
       });
     }
 
-    // Parse Iranian exchange rates
     const validExchanges = [];
     iranResults.forEach(r => {
       if (r.status === 'fulfilled' && r.value?.price) {
@@ -101,16 +120,15 @@ export async function onRequestGet(context) {
       }
     }), {
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Cache-Control': 'public, max-age=15'
+        ...SECURITY_HEADERS,
+        'Cache-Control': 'public, max-age=15, stale-while-revalidate=45'
       }
     });
 
   } catch (error) {
     return new Response(JSON.stringify({
       success: false,
-      error: error.message,
+      error: error.message || 'Internal pricing error',
       prices: {
         ton: 1.60,
         solana: 117.10,
@@ -122,13 +140,14 @@ export async function onRequestGet(context) {
       },
       iranTether: {
         averageToman: 234000,
-        sourcesCount: 5,
+        sourcesCount: 0,
         fallback: true
       }
     }), {
+      status: 200,
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        ...SECURITY_HEADERS,
+        'Cache-Control': 'public, max-age=5'
       }
     });
   }

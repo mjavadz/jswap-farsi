@@ -72,7 +72,7 @@ export default function NetworkDropdown({ activeChain, onSelectChain }) {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between gap-2.5 px-3.5 py-2.5 rounded-xl bg-dark-card border border-white/[0.08] hover:border-white/20 transition-all text-xs font-bold text-white shadow-sm"
+        className="w-full flex items-center justify-between gap-2.5 px-3.5 py-2 rounded-xl bg-card border border-border hover:border-accent/40 transition-all text-xs font-semibold text-fg shadow-sm"
       >
         <div className="flex items-center gap-2 truncate">
           <div className="shrink-0">{getChainIcon(activeChainObj.id, 18)}</div>
@@ -99,7 +99,7 @@ export default function NetworkDropdown({ activeChain, onSelectChain }) {
               placeholder="جستجوی شبکه (یونی‌سواپ، بیس، سولانا...)"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-3 pr-8 py-1.5 rounded-lg bg-dark-surface border border-white/[0.08] text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 font-sans"
+              className="w-full pl-3 pr-8 py-1.5 rounded-lg bg-card border border-border text-xs text-fg placeholder-fgSubtle focus:outline-none focus:border-accent font-sans"
               autoFocus
             />
             <Search size={14} className="absolute right-2.5 top-2 text-zinc-500" />
@@ -119,9 +119,9 @@ export default function NetworkDropdown({ activeChain, onSelectChain }) {
                       setSearch('');
                     }}
                     className={`w-full flex items-center justify-between p-2 rounded-xl text-xs transition-all pt-1.5 ${
-                      isSelected
-                        ? 'bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20'
-                        : 'text-zinc-300 hover:text-white hover:bg-dark-surface'
+                      isSelected 
+                        ? 'bg-accentSoft text-accent font-bold' 
+                        : 'text-fgMuted hover:text-fg hover:bg-muted'
                     }`}
                   >
                     <div className="flex items-center gap-2.5 truncate">

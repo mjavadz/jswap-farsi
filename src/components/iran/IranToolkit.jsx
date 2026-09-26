@@ -22,6 +22,7 @@ import {
 import { detectBankFromIBAN } from '../../utils/bankDetector';
 import { formatToman } from '../../utils/format';
 import { getTokenPrice, getIranTetherRate, getIranExchangesBreakdown } from '../../services/priceService';
+import { getTreasuryWallet } from '../../config/treasury';
 
 const IRAN_CASHOUT_ASSETS = [
   { id: 'usdt_trc20', name: 'تتر (TRC-20)', symbol: 'USDT', icon: <UsdtIcon size={20} />, min: 10 },
@@ -92,9 +93,8 @@ export default function IranToolkit() {
     }
 
     const orderId = 'IR-' + Math.floor(100000 + Math.random() * 900000);
-    const depositAddress = selectedAsset.id === 'ton' || selectedAsset.id === 'usdt_ton' || selectedAsset.id === 'stars'
-      ? 'UQDAq1m9F4wHqQ7xL2k8PvR_TonDepositDesk'
-      : 'TJSwP89IranianTreasuryPayoutTronUSDT99';
+    const treasury = getTreasuryWallet(selectedAsset.id);
+    const depositAddress = treasury?.address || '0xdB25e672d7873d178f6465E242BAdF44e990A787';
 
     setCashoutInvoice({
       orderId,

@@ -6,8 +6,10 @@ import StarsDesk from './components/stars/StarsDesk';
 import OrderTracker from './components/orders/OrderTracker';
 import IranToolkit from './components/iran/IranToolkit';
 import WalletModal from './components/WalletModal';
+import ChainSelectorModal from './components/ChainSelectorModal';
 import { useWallet } from './context/WalletContext';
-import { Clock, ShieldCheck, CreditCard, Sparkles, Zap, ArrowLeftRight, HelpCircle } from 'lucide-react';
+import { Clock, ShieldCheck, CreditCard, ArrowDownUp, HelpCircle } from 'lucide-react';
+import { StarsIcon } from './components/Icons';
 
 // VibeFarsi RTL Components & Backgrounds
 import { ScrollProgress } from '@/components/animations/scroll-progress';
@@ -22,7 +24,8 @@ export default function App() {
     activeChain, 
     setActiveChain, 
     walletAddress, 
-    isConnected 
+    isConnected,
+    isDemo 
   } = useWallet();
 
   const [activeTab, setActiveTab] = useState('swap');
@@ -49,7 +52,7 @@ export default function App() {
     {
       id: 'faq-4',
       title: 'کارمزد تراکنش‌ها در کدام شبکه اقتصادی‌تر است؟',
-      content: 'شبکه‌های تون (TON) و سولانا (Solana) سریع‌ترین سرعت تایید (کمتر از ۳ ثانیه) و کمترین کارمزد گس (کمتر از چند سنت) را برای مبادلات خرد و خرید استارز فراهم می‌کنند.'
+      content: 'شبکه‌های تون (TON)، سولانا (Solana) و لایه‌های دوم اتریوم (Arbitrum, Base, Polygon) سریع‌ترین سرعت تایید (کمتر از چند ثانیه) و کمترین کارمزد گس (کمتر از چند سنت) را برای مبادلات فراهم می‌کنند.'
     }
   ];
 
@@ -68,6 +71,7 @@ export default function App() {
         setActiveTab={setActiveTab}
         activeChain={activeChain}
         walletAddress={walletAddress}
+        isDemo={isDemo}
         onOpenWalletModal={() => setIsWalletModalOpen(true)}
         onOpenChainSelector={() => setIsChainModalOpen(true)}
       />
@@ -85,11 +89,11 @@ export default function App() {
           </div>
 
           <h1 className="text-2xl sm:text-4xl font-black text-foreground tracking-tight leading-tight">
-            مبادله سریع رمزارز و استارز تلگرام
+            صرافی غیرحضانتی چندزنجیره‌ای
           </h1>
           
           <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-md mx-auto">
-            مبادله مستقیم در استخرهای نقدینگی تون، سولانا، اتریوم و ترون بدون کارمزد پنهان و بدون نیاز به ثبت‌نام
+            مبادله مستقیم در استخرهای نقدینگی ۱۵ شبکه وب۳، خرید و فروش استارز تلگرام و تسویه بانکی به تومان
           </p>
         </div>
 
@@ -122,7 +126,7 @@ export default function App() {
           <Stat
             size="sm"
             label="شبکه‌های فعال متصل"
-            value="۴"
+            value="۱۵"
             unit="زنجیره"
           />
         </div>
@@ -133,7 +137,10 @@ export default function App() {
             {/* Tab 1: Multi-Chain Crypto Swap */}
             {activeTab === 'swap' && (
               <div className="animate-fade-in space-y-4">
-                <SwapCard onOpenWalletModal={() => setIsWalletModalOpen(true)} />
+                <SwapCard 
+                  onOpenWalletModal={() => setIsWalletModalOpen(true)} 
+                  onOpenChainSelector={() => setIsChainModalOpen(true)}
+                />
               </div>
             )}
 
@@ -185,7 +192,7 @@ export default function App() {
             activeTab === 'swap' ? 'text-accent font-semibold' : 'text-muted-foreground'
           }`}
         >
-          <ArrowLeftRight size={16} />
+          <ArrowDownUp size={16} />
           <span className="text-xs">سواپ</span>
         </button>
 
@@ -196,7 +203,7 @@ export default function App() {
             activeTab === 'stars' ? 'text-amber-400 font-semibold' : 'text-muted-foreground'
           }`}
         >
-          <Sparkles size={16} />
+          <StarsIcon size={16} />
           <span className="text-xs">استارز</span>
         </button>
 
@@ -230,7 +237,7 @@ export default function App() {
           }`}
         >
           <ShieldCheck size={16} />
-          <span className="text-xs">{isConnected ? 'ولت' : 'اتصال'}</span>
+          <span className="text-xs">{isConnected ? (isDemo ? 'دمو' : 'ولت') : 'اتصال'}</span>
         </button>
       </div>
 
@@ -240,27 +247,13 @@ export default function App() {
         onClose={() => setIsWalletModalOpen(false)}
       />
 
-      {/* Network / Chain Switcher Modal */}
-      {isChainModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div 
-            className="w-full max-w-sm bg-card border border-border rounded-xl p-4 space-y-3 shadow-lg animate-scale-in"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between pb-2.5 border-b border-border">
-              <h3 className="text-sm font-semibold text-foreground">انتخاب شبکه</h3>
-              <button 
-                type="button" 
-                onClick={() => setIsChainModalOpen(false)}
-                className="text-muted-foreground hover:text-foreground p-1 text-sm"
-              >
-                ✕
-              </button>
-            </div>
-            <p className="text-xs text-muted-foreground mb-2">یک شبکه برای مبادله انتخاب کنید</p>
-          </div>
-        </div>
-      )}
+      {/* Complete Network / Chain Switcher Modal */}
+      <ChainSelectorModal
+        isOpen={isChainModalOpen}
+        onClose={() => setIsChainModalOpen(false)}
+        activeChain={activeChain}
+        onSelectChain={(chain) => setActiveChain(chain)}
+      />
 
     </div>
   );
