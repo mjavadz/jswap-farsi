@@ -120,22 +120,7 @@ export default function SwapCard({ onOpenWalletModal, onOpenChainSelector }) {
 
   const renderTokenBadgeIcon = (token) => {
     if (!token) return null;
-    switch (token.icon) {
-      case 'eth': return <EthereumIcon size={18} />;
-      case 'sol': return <SolanaIcon size={18} />;
-      case 'ton': return <TonIcon size={18} />;
-      case 'trx': return <TronIcon size={18} />;
-      case 'usdt': return <UsdtIcon size={18} />;
-      case 'bnb': return <BnbIcon size={18} />;
-      case 'arb': return <ArbitrumIcon size={18} />;
-      case 'pol': return <PolygonIcon size={18} />;
-      default:
-        return (
-          <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[10px] font-bold text-fgSubtle">
-            {token.symbol[0]}
-          </div>
-        );
-    }
+    return <TokenLogo symbol={token.symbol} size={18} />;
   };
 
   const getButtonText = () => {
